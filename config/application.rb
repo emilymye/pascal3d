@@ -8,6 +8,7 @@ Bundler.require(:default, Rails.env)
 
 module Pascal3d
   class Application < Rails::Application
+    
     config.action_dispatch.default_headers.clear
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
