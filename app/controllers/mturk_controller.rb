@@ -17,7 +17,7 @@ class MturkController < ApplicationController
     elsif @annotation.stage == Annotation::STAGES[:orientation]
       render "orientation"
     elsif @annotation.stage == Annotation::STAGES[:keypoints]
-      @valid_keypoints = @annotation.category.keypoints xw
+      @valid_keypoints = @annotation.category.keypoints
       render "keypoints"
     else 
       render "/"
@@ -73,16 +73,13 @@ protected
     @preview = false #(params['assignmentId'] == 'ASSIGNMENT_ID_NOT_AVAILABLE')
     @sandbox  = RTurk.sandbox?
 
-    @formurl = "/mturk/test_form"
     if @via_turk
-      # @hit        = MtHit.find_by_mtId!(params['hitId'])
-      # @task       = @hit.mt_task
+      @form_url = "http://workersandbox.mturk.com/mturk/externalSubmit"
       if not @preview then
-        # get_worker        params['workerId']
-        # get_assignment    params['assignmentId']
 
-        
       end
+    else
+      @formurl = "/mturk/test_form"
     end
 
   end

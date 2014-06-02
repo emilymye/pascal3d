@@ -1,0 +1,111 @@
+<div class="error hide">
+  Error: Your browser does not support WebGl - you cannot do this task.
+</div>
+
+<div class = "container">
+<% if @annotation.nil? %>
+<div class="error">Error- this HIT is invalid. Please disregard.</div>
+<% else %>  
+  <% 
+  mesh = @annotation.mesh 
+  cat_pretty = @annotation.category_name.humanize.downcase
+  %>
+
+  <div class="instructions">
+    <h1>Rotate the 3D object to look like the  <%= cat_pretty %> in the image.</h1>
+    <p>Use the arrow keys to rotate the 3D object up and down, or left and right, until it looks similar to how the object is oriented in the photo.</p>
+
+    <div class = "buttons hide">
+      <a id="control_up" class="btn btn-blue">Up</a>
+      <a id="control_left" class="btn btn-blue">Left</a>
+      <a id="control_down" class="btn btn-blue">Down</a>
+      <a id="control_right" class="btn btn-blue">Right</a>
+      <a id="control_reset" class="btn btn-blue">Reset</a>
+    </div>
+
+    <% if @preview %>
+      <div>
+        Once you begin this task, you will see a button to submit your annotation here.
+      </div>
+    <% else %>
+      <form name="orientation_form" action="<%=@formurl%>"  method="post">
+        <%= hidden_field_tag 'elevation', 0 %>
+        <%= hidden_field_tag 'azimuth', 0 %>
+        <%= hidden_field_tag 'task', "orientation" %>
+        <%= hidden_field_tag 'annotation_id', @annotation.id %>
+        <%= hidden_field_tag 'assignmentId', @assignmentId %>
+        <%= submit_tag 'Submit', :class => "btn btn-green hide" %>
+      </form>
+    <%end%>
+
+  </div>
+
+  <div class = "images">
+    <%= render :partial => "annotated_image", :locals => { :img_file => @annotation.image_file, :annotation => @annotation } %>
+    <%= render :partial => "gl_viewer", :locals => { :mesh => mesh, :small => false }%>
+  </div>
+<% end %>
+</div>
+
+
+<script>
+  $(function(){
+    if ( !Detector.webgl ){
+      $(".error").show();
+      $(".container").remove();
+      return false;
+    }
+
+    var canvasid = $("canvas.viewport").attr("id");
+    var objV = new ObjectViewer("<%=mesh%>",canvasid, {
+      onLoaded: function() { 
+        $(".buttons").show();
+        $("#" + canvasid).next().hide();
+        $("input[type='submit']").show();
+
+        $("#control_up").click(function(){changeElevation(-1)});
+        $("#control_left").click(function(){changeAzimuth(1)});
+        $("#control_down").click(function(){changeElevation(1)});
+        $("#control_right").click(function(){changeAzimuth(-1)});
+        $("#control_reset").click(function(){resetOrientation() });
+
+      }
+    });
+
+    
+    function resetOrientation(){
+      $("input#azimuth").val(0.0);
+      $("input#elevation").val(0.0);
+      objV.setAzimuth(0.0);
+      objV.setElevation(0.0);
+    }
+  
+    function changeAzimuth(incr){
+      console.log($("input#azimuth").val());
+
+      var az = parseFloat($("input#azimuth").val());
+      az += Math.PI/180 * incr;
+      objV.setAzimuth(az);
+      $("input#azimuth").val(az);
+      console.log($("input#azimuth").val());
+    }
+
+    function changeElevation(incr){
+      var el = parseFloat($("input#elevation").val());
+      el += Math.PI/180 * incr;
+
+      $("#control_up").removeAttr("disabled");
+      $("#control_down").removeAttr("disabled");
+
+      if (el >= (Math.PI/2 - 0.00001))
+        $("#control_up").attr("disabled","true");
+      else if (el <= (-Math.PI/2 + 0.00001))
+        $("#control_down").attr("disabled","true");
+      else {
+        objV.setElevation(el);
+        $("input#elevation").val(el);
+
+      }
+    }
+  });
+</script>
