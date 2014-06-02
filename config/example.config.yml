@@ -1,0 +1,23 @@
+# This is only an example of a config.yml file
+# you will need to copy this to config/config.yml and 
+# fill it out for the app to work
+
+development:
+    # The following access keys are used to enable connection to
+    # Amazon Mechanical Turk.  You can get copies from Amazon
+    AWS_ACCESS_KEY_ID:        'xxxxx'
+    AWS_SECRET_ACCESS_KEY:    'xxxxx'
+    # The base url for this deployment (needed for rake tasks)
+    HOST_BASE_URL:            'http://pascal3d.stanford.edu/'
+
+test:
+    # copy development verbatim
+
+production:
+    # copy again verbatim
+
+# If you want to configure differently in dev and production, you can
+# control that here
+
+# If you want to ensure that code (i.e. rake tasks) only run under a given
+# environment then only include that environment section in this file.

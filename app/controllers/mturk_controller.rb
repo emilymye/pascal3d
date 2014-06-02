@@ -27,6 +27,7 @@ class MturkController < ApplicationController
       return
     end
 
+    p type
     if type == "bounding_box"
       @image = Image.find_by_id(params[:image_id])
       render :text unless !@image.nil?
@@ -46,10 +47,9 @@ class MturkController < ApplicationController
     else
       @annotation = Annotation.find_by_id(params[:annotation_id])
       render :text => "Error, no such annotation" and return unless !@annotation.nil?
-
       if type == "mesh"
+        @annotation.mesh = params[:mesh_file]
         render :text => "Error, no such mesh" and return unless @annotation.category.meshes.include?(params[:mesh_file])
-        @annotation.mesh = params[:mesh_id]
       elsif type == "orientation"
         @annotation.elevation = params[:elevation]
         @annotation.azimuth = params[:azimuth]
