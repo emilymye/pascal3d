@@ -1,11 +1,6 @@
 class MturkController < ApplicationController
   before_filter :set_mturk_attributes
   before_filter :set_annotation, :only => [ :edit_annotation ]
-
-  skip_before_filter :verify_authenticity_token  
-  
-  def test 
-  end
   
   def bounding_box
     @img = params[:image] || render_404
