@@ -1,0 +1,13 @@
+---
+:title: "Rotate 3D model to match image"
+:description: "Given an image of an object, rotate a 3D mesh of that object until it is oriented to look like the image. Your browser must support WebGL (no Internet Explorer)."
+:reward: 0.01
+:num_assignments: 1
+:duration: 1800
+:lifetime: 259200
+:auto_approval: 
+:frame_height: 700
+:keywords:  ["image","webgl", "mesh", "3D", "photo","annotation", "orientation"]
+:qualifications:
+  :approval_rate:
+    :gt: 80

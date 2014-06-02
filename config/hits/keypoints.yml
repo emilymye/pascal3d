@@ -1,0 +1,13 @@
+---
+:title: "Annotate points on image"
+:description: "Annotate specified keypoints on an object in the image. Your browser must support WebGL (no Internet Explorer)."
+:reward: 0.01
+:num_assignments: 1
+:duration: 1800
+:lifetime: 259200
+:auto_approval: 
+:frame_height: 700
+:keywords:  ["image","photo","annotation", "webgl", "3D"]
+:qualifications:
+  :approval_rate:
+    :gt: 80

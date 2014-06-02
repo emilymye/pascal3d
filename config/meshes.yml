@@ -1,0 +1,66 @@
+# meshes.yml
+# List of meshes for each category
+
+aeroplane:
+  - "aeroplane01.json"
+  - "aeroplane02.json"
+  - "aeroplane03.json"
+  - "aeroplane04.json"
+  - "aeroplane05.json"
+  - "aeroplane06.json"
+  - "aeroplane07.json"
+  - "aeroplane08.json"
+bicycle:
+  - "bicycle01.json"
+  - "bicycle02.json"
+  - "bicycle03.json"
+  - "bicycle04.json"
+  - "bicycle05.json"
+  - "bicycle06.json"
+boat:
+  - "boat01.json"
+  - "boat02.json"
+  - "boat03.json"
+  - "boat04.json"
+  - "boat05.json"
+  - "boat06.json"
+bottle:
+  - "bottle01.json"
+  - "bottle02.json"
+  - "bottle03.json"
+  - "bottle04.json"
+  - "bottle05.json"
+  - "bottle06.json"
+  - "bottle07.json"
+  - "bottle08.json"
+bus:
+  - "bus01.json"
+  - "bus02.json"
+  - "bus03.json"
+  - "bus04.json"
+  - "bus05.json"
+  - "bus06.json"
+car:
+  - "car01.json"
+  - "car02.json"
+  - "car03.json"
+  - "car04.json"
+  - "car05.json"
+  - "car06.json"
+  - "car07.json"
+  - "car08.json"
+  - "car09.json"
+  - "car10.json"
+chair:
+  - "car01.json"
+  - "car02.json"
+  - "car03.json"
+  - "car04.json"
+  - "car05.json"
+  - "car06.json"
+  - "car07.json"
+  - "car08.json"
+  - "car09.json"
+  - "car10.json"
+
+

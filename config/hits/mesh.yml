@@ -1,0 +1,13 @@
+---
+:title: "Categorize object in image"
+:description: "Indicate which of a group of objects best matches the object in the image. Your browser must support WebGL (no Internet Explorer)."
+:reward: 0.01
+:num_assignments: 1
+:duration: 1800
+:lifetime: 259200
+:auto_approval: 
+:frame_height: 700
+:keywords:  ["image","photo", "3D", "webgl", "categorization" ]
+:qualifications:
+  :approval_rate:
+    :gt: 80

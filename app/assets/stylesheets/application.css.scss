@@ -1,0 +1,138 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
+ * or vendor/assets/stylesheets of plugins, if any, can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the top of the
+ * compiled file, but it's generally better to create a new file per style scope.
+ *
+ *= require_self
+ *= require_tree .
+ */
+
+$red: #f2aca6;
+$darkred: #e96d63;
+$green: #7FCA9F;
+$darkgreen:#4ab377;
+$blue: #85C1F5;
+$darkblue: #4A789C;
+
+@font-face {
+    font-family: 'robotoregular';
+    src: url('font/Roboto-Regular-webfont.eot');
+    src: url('font/Roboto-Regular-webfont.eot?#iefix') format('embedded-opentype'),
+         url('font/Roboto-Regular-webfont.woff') format('woff'),
+         url('font/Roboto-Regular-webfont.ttf') format('truetype'),
+         url('font/Roboto-Regular-webfont.svg#robotoregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+h1{ font-size: 24px; line-height:30px;}
+h2{ font-size: 20px; line-height:24px;}
+h3{ font-size: 16px; line-height:20px;}
+
+body{
+  font-family: 'robotoregular', Helvetica, Arial;
+  font-size:14px;
+  line-height:20px;
+  -webkit-font-smoothing: antialiased;
+  color: #222;
+}
+
+.container {
+  width:960px;
+  height:600px;
+}
+
+.notice, .error{
+  padding:10px 12px;
+  background:$blue;
+  border: 1px solid $darkblue;
+  color:#222;
+  border-radius:2px;
+  width:50%;
+  margin:5px auto;
+}
+
+.error{
+  background:$red;
+  border: 1px solid $darkred;
+}
+
+.instructions{
+  float:left;
+  width:500px;
+  margin:0 15px 15px;
+  height:300px;
+}
+
+.images{
+  float:left;
+  display:inline-block;
+  width:400px;
+}
+
+.viewport{
+  width:400px;
+  height:300px;
+  
+  &.small {
+    width:300px;
+    height:225px;
+  }
+}
+
+.viewport-wrap{
+  width:400px;
+  height:300px; 
+  display:inline-block;
+  position:relative;
+
+  &.small {
+    width:300px;
+    height:225px;
+  }
+}
+
+.loading{
+  position:absolute;
+  top:50%;
+  left:50%;
+  margin-left:-50px;
+  margin-top:-50px;
+  width:100px;
+  height:100px;
+}
+
+.bounding_box {
+  display:inline-block;
+  border:2px solid $red;
+  position:absolute;
+}
+
+.horizontal_scroll{
+  clear:both;
+  margin-left:15px;
+  width:915px;
+  white-space:nowrap;
+  overflow-x: scroll;
+  overflow-y: hidden;
+
+  height:260px;
+  padding:5px 0;
+  border:1px solid #ccc;
+
+  .mesh-option{
+    display:inline-block;
+    width:300px;
+    text-align:center;
+  }
+}
+
+.hide {
+  display:none;
+}
+

@@ -1,0 +1,17 @@
+<%
+#Locals
+# => img_file: filepath of image
+# => annotation: Annotation object
+
+x = @annotation.x0
+y = @annotation.y0
+w = @annotation.x1 - @annotation.x0
+h = @annotation.y1 - @annotation.y0
+box_style = "left:#{x}px;top:#{y}px;width:#{w}px;height:#{h}px;"
+
+%>
+
+<div class="viewport-wrap">
+  <%= image_tag img_file, :id => "task_image", :class => "viewport" %>
+  <div class="bounding_box" style="<%= box_style %>"></div>
+</div>

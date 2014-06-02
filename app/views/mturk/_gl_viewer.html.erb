@@ -1,0 +1,13 @@
+<%
+#Locals
+# => small: boolean flag
+# => mesh: filepath of image
+
+small_class = small ? 'small' : ''
+canvasid = mesh[0..-6]
+%>
+
+<div class="viewport-wrap <%=small_class%>">
+  <canvas class="viewport <%=small_class%>" id="<%=canvasid%>" width="300" height="225"></canvas>
+  <div class="loading"><%=image_tag "loading.gif"%></div>
+</div>
