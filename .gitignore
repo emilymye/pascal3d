@@ -21,5 +21,4 @@
 
 #Ignore data to be dropped in seperately
 /public/data
-
-
+/app/assets/images/annotate
