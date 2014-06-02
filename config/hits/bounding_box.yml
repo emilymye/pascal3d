@@ -1,10 +1,10 @@
 :title: "Image Annotation"
-:description: "Annotate specified objects in the image. Do not use Internet Explorer for this HIT."
+:description: "Annotate a specific type of object in the image. Do not use Internet Explorer for this HIT."
 :reward: 0.01
 :num_assignments: 1
 :duration: 1800
 :lifetime: 259200
-:auto_approval: 
+:auto_approval: 259200
 :frame_height: 700
 :keywords:  ["image","photo","annotation"]
 :qualifications:

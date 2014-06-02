@@ -5,7 +5,7 @@ class MturkController < ApplicationController
   skip_before_filter :verify_authenticity_token  
   
   def bounding_box
-    @img = params[:image_file] || render_404
+    @img = params[:image] || render_404
     @category = Category.find_by_name(params[:category]) || render_404
     render_404 unless FileTest.exist?("app/assets/images/#{@img}")
   end
@@ -65,7 +65,6 @@ class MturkController < ApplicationController
         end
       end
     end
-
   end
 
 protected
