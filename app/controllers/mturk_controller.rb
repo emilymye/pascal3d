@@ -4,12 +4,15 @@ class MturkController < ApplicationController
 
   skip_before_filter :verify_authenticity_token  
   
+  def test 
+  end
+  
   def bounding_box
     @img = params[:image] || render_404
     @category = Category.find_by_name(params[:category]) || render_404
     render_404 unless Rails.application.assets.find_asset(@img)
 
-    
+
   end
 
   def edit_annotation
