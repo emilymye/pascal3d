@@ -16,7 +16,8 @@ ActiveRecord::Schema.define(version: 20140601020232) do
   create_table "annotations", force: true do |t|
     t.boolean  "submitted",        default: false, null: false
     t.integer  "stage",            default: 1,     null: false
-    t.integer  "image_id",                         null: false
+    t.string   "image_file",                       null: false
+    t.string   "category_name",                    null: false
     t.integer  "x0",                               null: false
     t.integer  "x1",                               null: false
     t.integer  "y0",                               null: false
@@ -29,7 +30,7 @@ ActiveRecord::Schema.define(version: 20140601020232) do
     t.datetime "updated_at"
   end
 
-  add_index "annotations", ["image_id"], name: "index_annotations_on_image_id"
+  add_index "annotations", ["image_file"], name: "index_annotations_on_image_file"
   add_index "annotations", ["stage"], name: "index_annotations_on_stage"
   add_index "annotations", ["submitted"], name: "index_annotations_on_submitted"
 
@@ -42,15 +43,5 @@ ActiveRecord::Schema.define(version: 20140601020232) do
   end
 
   add_index "categories", ["name"], name: "index_categories_on_name", unique: true
-
-  create_table "images", force: true do |t|
-    t.string   "filepath",      null: false
-    t.string   "category_name", null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "images", ["category_name"], name: "index_images_on_category_name"
-  add_index "images", ["filepath"], name: "index_images_on_filepath", unique: true
 
 end

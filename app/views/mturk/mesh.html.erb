@@ -2,18 +2,18 @@
   Error: Your browser does not support WebGl - you cannot do this task.
 </div>
 <div class = "container">
-<% if @annotation.nil? or @image.nil? %>
-<div class="error">Error in displaying image - please disregard this task.</div>
+<% if @annotation.nil? %>
+<div class="error">Error- this HIT is invalid. Please disregard.</div>
 <% else %>  
-  <% object_type = @image.category_name.humanize.downcase %>
+  <% cat_pretty = @annotation.category_name.humanize.downcase %>
   <form name="mesh_form" action="<%= @formurl %>"  method="post">
   <div class= "instructions">
     <h1>Match a 3D model to the object.</h1>
-    <p>Choose the model that most closely resembles the indicated <%= object_type %> (within the red box) in the photo. Try to get as close as possible, even if there isn't an exact fit</p>
+    <p>Choose the model that most closely resembles the indicated <%= cat_pretty %> (within the red box) in the photo. Try to get as close as possible, even if there isn't an exact fit</p>
     <%= submit_tag 'Submit', :class => "hide btn btn-green" %>
   </div>
   <div class= "images">
-    <%= render :partial => "annotated_image", :locals => { :img_file => @image.filepath, :annotation => @annotation } %>
+    <%= render :partial => "annotated_image", :locals => { :img_file => @annotation.image_file, :annotation => @annotation } %>
   </div>
     <div class= "horizontal_scroll">
       <% @meshes.each do |m| %>

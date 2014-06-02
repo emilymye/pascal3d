@@ -1,10 +1,11 @@
 class CreateAnnotations < ActiveRecord::Migration
   def change
     create_table :annotations do |t|
-      t.boolean   :submitted, :null => false, :default => 0
-      t.integer   :stage,  :null => false, :default => 1
+      t.boolean   :submitted,       :null => false, :default => 0
+      t.integer   :stage,           :null => false, :default => 1
       
-      t.references  :image, :null => false
+      t.string      :image_file,    :null => false
+      t.string      :category_name, :null => false
       t.integer     :x0, :null => false
       t.integer     :x1, :null => false
       t.integer     :y0, :null => false
@@ -17,7 +18,7 @@ class CreateAnnotations < ActiveRecord::Migration
       t.timestamps
     end
 
-    add_index :annotations, :image_id
+    add_index :annotations, :image_file
     add_index :annotations, :submitted
     add_index :annotations, :stage
   end

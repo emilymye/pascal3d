@@ -1,23 +1,20 @@
 <div class = "container">
-
-<% if @image.nil? %>
-<div class="error">Error in displaying image - please disregard this task.</div>
-<% else %>
-<% object_type = @image.category_name.humanize.downcase %>
+<% cat_pretty = @category.name.humanize.downcase %>
 <div class = "instructions">
-  <h1>Annotate the <%= object_type %> in the image.</h1>
-  <p>Resize the rectangle so it tightly bounds the <strong><%=object_type %></strong> in the picture. If there is more than one <%=object_type %> in the image, choose one.</p>
+  <h1>Annotate the <%= cat_pretty %> in the image.</h1>
+  <p>Resize the rectangle so it tightly bounds the <strong><%=cat_pretty %></strong> in the picture. If there is more than one <%=cat_pretty %> in the image, choose one.</p>
   
   <% if @preview %>
     <div>
       Once you begin this task, you will see a button to submit your annotation here.
     </div>
   <% else %>
-    <form name="bounding_box_form" action="<%= @formurl%>"  method="post">
-
+    <form name="bounding_box_form" action="<%= @formurl %>"  method="post">
       <%= hidden_field_tag 'assignmentId', @assignmentId%>
       <%= hidden_field_tag 'task', "bounding_box"%>
-      <%= hidden_field_tag 'image_id', @image.id%>
+      <%= hidden_field_tag 'image_file', @img%>
+      <%= hidden_field_tag 'category_name', @category.name%>
+
       <!-- bounding box -->
       <%= hidden_field_tag 'x0', 0 %>
       <%= hidden_field_tag 'x1', 0 %>
@@ -30,10 +27,8 @@
   </div>
   
   <div class = "images">
-    <%= image_tag @image.filepath, :id=>"task-image", :class => "viewport" %>
+    <%= image_tag @img, :id=>"task-image", :class => "viewport" %>
   </div>
-
-<% end %>
 </div>
 
 

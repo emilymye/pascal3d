@@ -12,5 +12,5 @@ class Category < ActiveRecord::Base
   serialize :keypoints, Array
   serialize :meshes, Array
 
-  has_many :images, :foreign_key => :category_name, :primary_key => :name
+  has_many :annotations, :foreign_key => :category_name, :primary_key => :name
 end

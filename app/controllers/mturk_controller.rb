@@ -1,10 +1,14 @@
 class MturkController < ApplicationController
   before_filter :set_mturk_attributes
-  before_filter :set_image, :only => [ :bounding_box ]
   before_filter :set_annotation, :only => [ :edit_annotation ]
 
   skip_before_filter :verify_authenticity_token  
   
+  def bounding_box
+    @img = params[:image_file] || render_404
+    @category = Category.find_by_name(params[:category]) || render_404
+    render_404 unless FileTest.exist?("app/assets/images/#{@img}")
+  end
 
   def edit_annotation
     if @annotation.stage == Annotation::STAGES[:mesh]
@@ -13,7 +17,7 @@ class MturkController < ApplicationController
     elsif @annotation.stage == Annotation::STAGES[:orientation]
       render "orientation"
     elsif @annotation.stage == Annotation::STAGES[:keypoints]
-      @valid_keypoints = @annotation.category.keypoints 
+      @valid_keypoints = @annotation.category.keypoints xw
       render "keypoints"
     else 
       render "/"
@@ -22,18 +26,11 @@ class MturkController < ApplicationController
 
   def test_form
     type = params[:task]
-    if ![ "bounding_box", "mesh", "orientation", "keypoints"].include?(type)
-      render :text => "Error, incorrect type"
-      return
-    end
 
-    p type
     if type == "bounding_box"
-      @image = Image.find_by_id(params[:image_id])
-      render :text unless !@image.nil?
-      
       @annotation = Annotation.new
-      @annotation.image_id = @image.id
+      @annotation.image_file = params[:image_file]
+      @annotation.category_name = params[:category_name]
       @annotation.x0 = params[:x0]
       @annotation.x1 = params[:x1]
       @annotation.y0 = params[:y0]
@@ -93,10 +90,5 @@ protected
 
   def set_annotation
     @annotation = Annotation.find_by_id(params[:annotation_id]) || render_404
-    @image = @annotation.image
-  end
-
-  def set_image
-    @image = Image.find_by_id(params[:image_id]) || render_404
   end
 end

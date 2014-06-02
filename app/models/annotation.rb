@@ -5,7 +5,8 @@
 #  id                 :integer          not null, primary key
 #  submitted          :boolean          not null, default false
 #  stage              :integer          not null, default 0 (:mesh)
-#  integer_id         :integer          not null, foreign key
+#  image_file         :string(255)      not null
+#  category_name      :string(255)      not null, foreign key
 #  x0                 :integer          not null
 #  x1                 :integer          not null
 #  y0                 :integer          not null
@@ -20,8 +21,7 @@
 require 'json'
 
 class Annotation < ActiveRecord::Base
-  belongs_to :image
-  has_one    :category, :through => :image
+  belongs_to :category, :foreign_key => :category_name, :primary_key => :name
 
   serialize :keypoint_matches, Hash
 
