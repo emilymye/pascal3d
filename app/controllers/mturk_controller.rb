@@ -7,7 +7,7 @@ class MturkController < ApplicationController
   def bounding_box
     @img = params[:image] || render_404
     @category = Category.find_by_name(params[:category]) || render_404
-    render_404 unless FileTest.exist?("app/assets/images/#{@img}")
+    render_404 unless Rails.application.assets.find_asset(@img)
   end
 
   def edit_annotation
