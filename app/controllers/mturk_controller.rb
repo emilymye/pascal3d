@@ -3,10 +3,9 @@ class MturkController < ApplicationController
   before_filter :set_annotation, :only => [ :edit_annotation ]
   
   def bounding_box
-    @img = params[:image] || render_404
-    @category = Category.find_by_name(params[:category]) || render_404
-    render_404 unless Rails.application.assets.find_asset(@img)
-
+    @img = params[:image] || render_401
+    @category = Category.find_by_name(params[:category]) || render_401
+    render_401 unless Rails.application.assets.find_asset(@img)
 
   end
 

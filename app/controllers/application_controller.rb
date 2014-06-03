@@ -6,4 +6,8 @@ class ApplicationController < ActionController::Base
   def render_404
     raise ActionController::RoutingError.new('Not Found')
   end
+
+  def render_401
+    raise ActionController::BadRequest.new('Bad Request')
+  end
 end
