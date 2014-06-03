@@ -2,10 +2,13 @@ class MturkController < ApplicationController
   before_filter :set_mturk_attributes
   before_filter :set_annotation, :only => [ :edit_annotation ]
   
+  skip_before_filter :verify_authenticity_token
+  
   def bounding_box
     @img = params[:image] || render_401
     @category = Category.find_by_name(params[:category]) || render_401
     render_401 unless Rails.application.assets.find_asset(@img)
+
 
   end
 
