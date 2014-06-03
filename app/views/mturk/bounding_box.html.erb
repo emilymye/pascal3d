@@ -10,7 +10,6 @@
     </div>
   <% else %>
     <form name="bounding_box_form" action="<%= @formurl %>"  method="post">
-      <%= form_authenticity_token %>
       <%= hidden_field_tag 'assignmentId', @assignmentId%>
       <%= hidden_field_tag 'task', "bounding_box"%>
       <%= hidden_field_tag 'image_file', @img%>
