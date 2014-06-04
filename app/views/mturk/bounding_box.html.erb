@@ -8,7 +8,7 @@
       <strong>This is a preview.</strong> Once you begin this task, you will see a button to submit your annotation here.
     </p>
   <% else %>
-    <form id="bounding_box_form" action="<%= @formurl %>"  method="post">
+    <form id="bounding_box_form" action="<%= @formurl %>"  method="POST">
       <%= hidden_field_tag 'assignmentId', @assignmentId%>
       <%= hidden_field_tag 'task', "bounding_box"%>
       <%= hidden_field_tag 'image_file', @img%>

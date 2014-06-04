@@ -76,12 +76,11 @@ class MturkController < ApplicationController
 
 protected
   def set_mturk_attributes
-    @via_turk = !!params['assignmentId']
+    @via_turk = !params['assignmentId'].nil?
     @preview = (params['assignmentId'] == 'ASSIGNMENT_ID_NOT_AVAILABLE')
-    @sandbox  = RTurk.sandbox?
 
     if @via_turk
-      @form_url = "http://#{@sandbox ? "worker" : "www"}.mturk.com/mturk/externalSubmit"
+      @formurl = "http://#{RTurk.sandbox? ? "worker" : "www"}.mturk.com/mturk/externalSubmit"
       if not @preview then
 
       end
