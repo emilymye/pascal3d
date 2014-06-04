@@ -80,7 +80,7 @@ protected
     @preview = (params['assignmentId'] == 'ASSIGNMENT_ID_NOT_AVAILABLE')
 
     if @via_turk
-      @formurl = "http://#{RTurk.sandbox? ? "workersandbox" : "www"}.mturk.com/mturk/externalSubmit"
+      @formurl = "https://#{RTurk.sandbox? ? "workersandbox" : "www"}.mturk.com/mturk/externalSubmit"
       if not @preview then
 
       end
