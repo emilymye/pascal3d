@@ -1,0 +1,156 @@
+<div id="marker" class="marker"></div>
+<div class="error hide">
+  Error: Your browser does not support WebGl - you cannot do this task.
+</div>
+
+<div class = "container">
+<% if @annotation.nil? %>
+<div class="error">Error- this HIT is invalid. Please disregard.</div>
+<% else %>  
+  <% 
+  mesh = @annotation.mesh 
+  cat_pretty = @annotation.category_name.humanize.downcase
+  keyptJSON = JSON.generate(@annotation.keypoint_matches)
+  %>
+
+  <div class="instructions">
+    <h1>Match points on the mesh <%= cat_pretty %> to the photo.</h1>
+    <p>Given a keypoint - a red dot on the 3D <%= cat_pretty %> - find the same point on the <%= cat_pretty %> in the photo. Click to mark the point (a blue dot will appear) 
+    </p>
+    <p>If the <%= cat_pretty %> is not completely within the image and the point is outside, mark approximately where you think this point would be. For example, if we give you a plane and put a red point on the wingtip, mark the wingtip of the plane in the image, or where you think the wingtip would be if it extends off the image.
+
+    <div class = "buttons hide">
+      Use the buttons below to change keypoints. 
+      You will be allowed to submit only once you have given an answer for all keypoints
+      <br/>
+      <div style = "margin-bottom:5px;">
+        <a id="control_prev" class="btn btn-blue">Prev</a>
+        <a id="control_next" class="btn btn-blue">Next</a>
+      </div>
+      <div id="match_status"></div>
+      <br/>
+      <% if @preview %>
+        <div>
+          Once you begin this task, you will see a button to submit your annotation here.
+        </div>
+      <% else %>
+        <div id="keypoints_information"> </div>
+        <form id="keypoint_form" action="<%=@formurl%>"  method="post">
+          <%= hidden_field_tag 'task', "keypoints" %>
+          <%= hidden_field_tag 'annotation_id', @annotation.id %>
+          <%= hidden_field_tag 'assignmentId', @assignmentId %>
+          <%= submit_tag 'Submit', :class => "btn btn-green hide" %>
+        </form>
+      <%end%>
+
+    </div>
+  </div>
+
+  <div class = "images">
+    <%= render :partial => "annotated_image", :locals => { :img_file => @annotation.image_file, :annotation => @annotation } %>
+    <%= render :partial => "gl_viewer", :locals => { :mesh => mesh, :small => false }%>
+  </div>
+<% end %>
+</div>
+
+
+<script>
+  $(function(){
+    var markerOffset = $("#marker").width()/2;
+    var keypointMatches = <%= raw keyptJSON%>;
+    var keypointNames = [];
+    for(var k in keypointMatches) keypointNames.push(k);
+    var count = 0;
+    var setKeypoints = {};
+    var nKeypoints = keypointNames.length;
+    var currKeypoint = 0;
+
+    if ( !Detector.webgl ){
+      $(".error").show();
+      $(".container").remove();
+      return false;
+    }
+
+    var canvasid = $("canvas.viewport").attr("id");
+    var objV = new ObjectViewer("<%=mesh%>",canvasid, {
+      elevation: parseFloat("<%= @annotation.elevation %>"),
+      azimuth: parseFloat("<%= @annotation.azimuth %>"),
+      onLoaded: function() { 
+        $(".buttons").show();
+        $("#" + canvasid).next().hide();
+        $("input[type='submit']").show();
+
+        objV.loadKeypointMeshes(keypointMatches);
+        objV.setCurrentKeypoint( keypointNames[currKeypoint] );
+
+        $("input[type='submit']").click(function(e){e.stopPropagation();});
+        $("#control_next").click(function(e){ changeKeypoint(1);e.stopPropagation(); });
+        $("#control_prev").click(function(e){ changeKeypoint(-1);e.stopPropagation(); });
+
+        $(document).click( setMarker );
+      }
+    });
+
+    function setMarker(e){
+      var offset = $("#task_image").offset();
+      var px = e.pageX - offset.left;
+      var py = e.pageY - offset.top;
+      var kpName = keypointNames[currKeypoint];
+      keypointMatches[kpName].px = px;
+      keypointMatches[kpName].py = py;
+      console.log(keypointMatches[kpName]);
+      setKeypoints[kpName] = true;
+
+      $("marker").show();
+      $("#marker").offset({ top: e.pageY - markerOffset, left: e.pageX - markerOffset});
+      count = 0;
+      for (var i in setKeypoints){
+        if (setKeypoints[i]) count++;
+      }
+      $("#match_status").text( count + " of " + nKeypoints + " keypoints matched");
+    } 
+
+    function changeKeypoint(incr) {
+      currKeypoint = currKeypoint + incr;
+      if (currKeypoint < 0) 
+        currKeypoint = nKeypoints - 1;
+      else if (currKeypoint >= nKeypoints)
+        currKeypoint = 0;
+      var kpName = keypointNames[currKeypoint];
+
+      if (!isNaN(keypointMatches[kpName].px) && 
+          !isNaN(keypointMatches[kpName].py)){
+        var offset = $("#task_image").offset();
+        $("#marker").offset({ 
+          top: offset.top + keypointMatches[kpName].py - markerOffset,
+          left: offset.left + keypointMatches[kpName].px - markerOffset
+        })
+      } else {
+        $("#marker").hide();
+      }
+      objV.setCurrentKeypoint(kpName);
+    }
+
+    $("#keypoint_form").submit(function(){
+      if (count < nKeypoints) {
+        alert("Not all keypoints have been matched!")
+        return false;
+      }
+      for (var n in keypointMatches){
+        if (isNaN(keypointMatches[n].x)  || 
+            isNaN(keypointMatches[n].y)  ||
+            isNaN(keypointMatches[n].z)  ||
+            isNaN(keypointMatches[n].px) ||
+            isNaN(keypointMatches[n].py))
+          return false
+      }
+
+      console.log(JSON.stringify(keypointMatches));
+      $("#keypoint_form").append(
+        $("<input>").attr("type", "hidden")
+                    .attr("name","keypoint_matches")
+                    .val(JSON.stringify(keypointMatches))
+      );
+    });
+  }); 
+</script>

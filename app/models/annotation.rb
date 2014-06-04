@@ -56,6 +56,12 @@ class Annotation < ActiveRecord::Base
 
     self.keypoint_matches.each do |k,v|
       self.errors[:base] << "Invalid keypoint name #{k}" unless valid_names.include?(k)
+      if v.class == Hash
+        self.errors[:base] << "Invalid keypoint value keys" unless v.length == 5 and (v.keys - ["x","y","z","px","py"]).empty?
+      else 
+        self.errors[:base] << "Invalid keypoint - not hash" unless @v.class == Hash
+      end
+
     end
   end
 

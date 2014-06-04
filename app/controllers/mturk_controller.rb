@@ -1,3 +1,5 @@
+require 'json'
+
 class MturkController < ApplicationController
   before_filter :set_mturk_attributes
   before_filter :set_annotation, :only => [ :edit_annotation ]
@@ -18,10 +20,9 @@ class MturkController < ApplicationController
     elsif @annotation.stage == Annotation::STAGES[:orientation]
       render "orientation"
     elsif @annotation.stage == Annotation::STAGES[:keypoints]
-      @valid_keypoints = @annotation.category.keypoints
       render "keypoints"
     else 
-      render "/"
+      render "complete_annotation"
     end
   end
 
@@ -51,8 +52,13 @@ class MturkController < ApplicationController
       elsif type == "orientation"
         @annotation.elevation = params[:elevation]
         @annotation.azimuth = params[:azimuth]
+        @annotation.keypoint_matches = JSON.parse(params[:keypoint_matches])
+        @annotation.keypoint_matches.each do |k,v|
+          v["px"] = nil
+          v["py"] = nil
+        end
       elsif type == "keypoints"
-
+        @annotation.keypoint_matches = JSON.parse(params[:keypoint_matches])
       end
 
       if !@annotation.nil?

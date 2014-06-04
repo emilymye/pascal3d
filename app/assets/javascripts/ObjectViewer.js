@@ -14,10 +14,10 @@ var ObjectViewer = function( mesh, canvas_id, options) {
   options = options || {}
   var ambientLight, directionalLight, w,h, loader, onLoaded;
 
-  this.orbitSpeed = options["orbit_speed"] || 0;
-  this.use_keypoints = options["keypoints"] || false;
-  this.azimuth = options["azimuth"] || 0;
-  this.elevation = options["elevation"] || 0;
+  this.orbitSpeed = options.orbit_speed || 0;
+  this.azimuth = options.azimuth || 0;
+  this.elevation = options.elevation || 0;
+
   onLoaded = options.onLoaded || function (){}
 
   this.scene = new THREE.Scene();  
@@ -57,9 +57,7 @@ var ObjectViewer = function( mesh, canvas_id, options) {
     this.scene.add(this.mesh);
     this.scene.add(meshWire);
 
-    if ( this.use_keypoints )
-      this.findVisibleKeypoints();
-    
+    this.keypoints = keypoints;
     this.animate();
     onLoaded();
   }
@@ -99,31 +97,32 @@ ObjectViewer.prototype.setElevation = function( angle ){
   this.elevation = angle;
 }
 
-ObjectViewer.prototype.findVisibleKeypoints = function(keypoints){
-  this.keypoints = [];
-  var keypointMaterial= new THREE.MeshBasicMaterial({color:0xff00000 }), 
-      radius = 0.02, 
-      keypoint, caster, ray, pos, intersections, visible;
+ObjectViewer.prototype.findVisibleKeypoints = function() {
+  if (this.keypoints === undefined) return;
 
-  caster = new THREE.Raycaster();
-  for (pt in keypoints){
-    keypoint = new THREE.Mesh( new THREE.SphereGeometry(radius), keypointMaterial );
-    keypoint.userData["name"] = pt;
-    keypoint.position = new THREE.Vector3(keypoints[pt].x, keypoints[pt].y, keypoints[pt].z );
+  var keypoints = {},
+      keypointMaterial= new THREE.MeshBasicMaterial({color:0xff00000 }), 
+      caster = new THREE.Raycaster(), ray, intersections,
+      radius = 0.02, name, pt, keypoint_visible, keypos;
+
+  for (name in this.keypoints){
+    pt = new THREE.Mesh( new THREE.SphereGeometry(radius), keypointMaterial );
+    pt.position = new THREE.Vector3(this.keypoints[name].x, this.keypoints[name].y, this.keypoints[name].z );
     keypoint_visible = false;
 
     //interesect with several points
     for (var i = -1; i <= 1; i++){
       for (var j = -1; j <= 1; j++){
         for (var k = -1; k <= 1; k++){
-          keypos = new THREE.Vector3(keypoints[pt].x + i * radius, keypoints[pt].y + j * radius, keypoints[pt].z + k * radius);
+          keypos = new THREE.Vector3(i * radius, j * radius, k * radius)
+          keypos.add(pt.position);
           ray = new THREE.Vector3();
           ray.subVectors(keypos, this.camera.position);
           ray.normalize();
           caster.set(this.camera.position, ray);
-          intersections = caster.intersectObjects( [ this.mesh, keypoint ] , false );
-          intersections = caster.intersectObjects( [ this.mesh, keypoint ] , false );
-          if (intersections.length > 0 && intersections[0].point.distanceToSquared(keypoint.position) <= radius * radius){
+          intersections = caster.intersectObjects( [ this.mesh, pt ] , false );
+          intersections = caster.intersectObjects( [ this.mesh, pt ] , false );
+          if (intersections.length > 0 && intersections[0].point.distanceToSquared(pt.position) <= radius * radius){
             keypoint_visible = true;
           }
         }
@@ -131,41 +130,31 @@ ObjectViewer.prototype.findVisibleKeypoints = function(keypoints){
     }
 
     if (keypoint_visible){
-      keypoint.visible = false;
-      this.keypoints.push(keypoint);
-      this.scene.add(keypoint)
-    }
-
-    if (this.keypoints.length > 0){
-      this.currKeypoint = 0;
-      this.keypoints[0].visible = true;
+      keypoints[name] = this.keypoints[name];
     }
   }
+  return keypoints;
 }
 
-// ObjectViewer.prototype.changeKeypoint = function(incr){
-//   if (this.currKeypoint < 0) return;
-//   this.keypoints[this.currKeypoint].visible = false;
-//   this.currKeypoint = this.currKeypoint + incr;
-//   while (this.currKeypoint < 0) {
-//     this.currKeypoint += this.keypoints.length;
-//   }
-//   while (this.currKeypoint >= this.keypoints.length ) {
-//     this.currKeypoint -= this.keypoints.length;
-//   }
-//   this.keypoints[this.currKeypoint].visible = true;
-// };
 
-// ObjectViewer.prototype.getCurrentKeypoint = function(incr){
-//   return this.keypoints[this.currKeypoint];
-// };
+ObjectViewer.prototype.loadKeypointMeshes = function( keypts ){
+  this.keypoint_objects = {};
+  var keypointMaterial= new THREE.MeshBasicMaterial({color:0xff00000 }), 
+    name, pt;
+  for (name in keypts){
+    pt = new THREE.Mesh( new THREE.SphereGeometry(0.02), keypointMaterial );
+    pt.position = new THREE.Vector3(keypts[name].x, keypts[name].y, keypts[name].z );
+    pt.visible = false;
+    this.scene.add(pt);
+    this.keypoint_objects[name] = pt;
+  }
+  this.currentKeypoint = "";
+}
 
-// ObjectViewer.prototype.deleteCurrentKeypoint = function(incr){
-//   console.log(this.keypoints.length);
-//   var pt = this.keypoints.splice(this.currKeypoint, 1)[0];
-//   // pt.visible = false;
-//   console.log(pt);
-//   this.scene.remove(pt);
-//   this.changeKeypoint(0); // to make sure we stay in bounds
-// };
 
+ObjectViewer.prototype.setCurrentKeypoint = function( name ){
+  if (this.currentKeypoint.length > 0 && this.currentKeypoint in this.keypoint_objects)
+    this.keypoint_objects[this.currentKeypoint].visible = false;
+  this.keypoint_objects[name].visible = true;
+  this.currentKeypoint = name;
+}

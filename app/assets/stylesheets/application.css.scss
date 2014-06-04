@@ -136,3 +136,43 @@ body{
   display:none;
 }
 
+.btn {
+  text-align:center;
+  display:inline-block;
+  border-radius:2px;
+  width:50px !important;
+  height:30px !important;
+  line-height:30px !important;
+  font-size: 12px !important;
+  padding:0px !important;
+  &:hover {
+    color:#222;
+    cursor:pointer;
+  }
+}
+
+.btn.btn-blue{
+  border: 1px solid $darkblue;
+  background-color:$blue;
+}
+
+.btn.btn-grey{
+  border: 1px solid #999;
+  background-color:#dedada;
+}
+
+.btn.btn-green{
+  border: 1px solid $darkgreen;
+  background-color:$green;
+}
+
+$marker-size: 10px;
+.marker{
+  display:inline-block;
+  position:absolute;
+  width:$marker-size;
+  height:$marker-size;
+  border-radius: $marker-size/2;
+  background-color:$darkblue;
+  z-index:100;
+}
