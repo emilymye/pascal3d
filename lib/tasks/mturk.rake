@@ -45,14 +45,23 @@ namespace :mturk do
     orientation_params = YAML::load_file('config/hits/orientation.yml' )
     keypoints_params = YAML::load_file('config/hits/keypoints.yml' )
 
-    RTurk::Hit.create(:title => hit_params[:title] ) do |hit|
-      hit.max_assignments = 2
-      hit.description = 'blah'
-      hit.question(url,:frame_height => 1000)  # pixels for iframe
-      hit.reward = 0.05
-      hit.duration = 
-      hit.qualifications.add :approval_rate, { :gt => 80 }
+    hits = RTurk::Hit.all_reviewable
 
+    puts "#{hits.size} reviewable hits. \n"
+
+    unless hits.empty?
+      puts "Reviewing all assignments"
+
+      hits.each do |hit|
+        h = RTurk::Hit.find(hit.id)
+        p h.status
+        hit.assignments.each do |assignment|
+          puts assignment.answers
+          # assignment.approve! if assignment.status == 'Submitted'
+        end
+      end
     end
+
+
   end
 end
