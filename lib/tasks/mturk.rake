@@ -82,11 +82,18 @@ namespace :mturk do
     hit_param_types = {mesh: mesh_params, orientation: orientation_params, keypoint: keypoint_params}
 
     count = 0
-    Annotation.where( "stage < ? and submitted = 'f'", Annotation::STAGES[:complete]).each do |a|
+
+    to_submit = Annotation.where( "stage < ? and submitted = 'f'", Annotation::STAGES[:complete])
+    if (to_submit.count == 0)
+      p "No annotation to submitted"
+      next
+    end
+
+    to_submit.each do |a|
       rturk_hit = a.submit_hit(hit_param_types)
       count = count+1 unless rturk_hit.nil?
     end
-    p "#{count} annotations submitted"
+    p "#{count} annotations successfully submitted"
   end
 
   desc 'sync Mechanical Turk HITs'
