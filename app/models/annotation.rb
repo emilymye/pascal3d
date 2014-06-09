@@ -29,7 +29,7 @@ class Annotation < ActiveRecord::Base
     :mesh         => 1,
     :orientation  => 2,
     :keypoints    => 3,
-    :completed    => 4
+    :complete     => 4
   }
 
   validates :mesh,      :with => :check_mesh
