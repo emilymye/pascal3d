@@ -147,13 +147,13 @@ class Annotation < ActiveRecord::Base
       category_name,
       x0, x1, y0, y1,
       mesh,
-      elevation,
-      azimuth,
-      keypoints.count
+      elevation.to_f,
+      azimuth.to_f,
+      keypoint_matches.count
     ]
 
     keypoint_matches.each do |k,v| 
-      arr << k << v.px << v.py << v.x << v.y << v.z
+      arr << k << v["px"] << v["py"] << v["x"] << v["y"] << v["z"]
     end
 
     return arr

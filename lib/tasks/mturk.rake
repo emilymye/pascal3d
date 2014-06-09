@@ -168,4 +168,22 @@ namespace :mturk do
       h.dispose!
     end
   end
+
+  desc 'export all completed annotations'
+  task :export, [:filename, :delete_record] => :environment do |t,args|
+    file = args[:filename] || "annotation_results.csv"
+
+    p "Error - Export filename must have .csv extension" and next if file[-4..-1] != ".csv"
+    completed = Annotation.where(stage: Annotation::STAGES[:complete])
+    p "No annotations are complete" and next if completed.empty?
+
+    CSV.open("results/" + file, "wb") do |csv|
+      completed.each do |annotation|
+        csv << annotation.export
+        annotation.delete if args[:delete_record]
+      end
+    end
+    p "Written to results/#{file}"
+  end
+
 end

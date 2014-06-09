@@ -63,13 +63,8 @@
         $("#" + canvasid).next().hide();
         $("input[type='submit']").show();
 
-        $("#control_up").click(function(){ changeElevation(-1); });
-        $("#control_right").click(function(){ changeAzimuth(-1); });
-        $("#control_left").click(function(){ changeAzimuth(1); });
-        $("#control_down").click(function(){ changeElevation(1); });
-        $("#control_right").click(function(){ changeAzimuth(-1); });
-        $("#control_reset").click(function(){ resetOrientation(); });
-
+        resetOrientation();
+        
         $(document).keydown( function(event){ 
           if (event.which == 37)
             changeAzimuth(1);
@@ -83,6 +78,13 @@
 
       }
     });
+
+    $("#control_up").click(function(){ changeElevation(-1); });
+    $("#control_right").click(function(){ changeAzimuth(-1); });
+    $("#control_left").click(function(){ changeAzimuth(1); });
+    $("#control_down").click(function(){ changeElevation(1); });
+    $("#control_right").click(function(){ changeAzimuth(-1); });
+    $("#control_reset").click(function(){ resetOrientation(); });
 
     
     function resetOrientation(){
