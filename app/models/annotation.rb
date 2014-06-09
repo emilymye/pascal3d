@@ -118,10 +118,12 @@ class Annotation < ActiveRecord::Base
     when STAGES[:keypoints]
       type = "keypoints"
     when STAGES[:complete]
-      p "Annotation"
+      p "Annotation is complete, no need to submit HIT"
     end
 
-    hit_params = params[type]|| YAML::load_file('config/hits/#{ type }.yml')
+    filename = "config/hits/#{ type }.yml"
+
+    hit_params = params[type]|| YAML::load_file(filename)
     url = INIT_CONFIG["HOST_BASE_URL"] + "mturk/edit_annotation/#{id}"
 
     begin
@@ -130,7 +132,7 @@ class Annotation < ActiveRecord::Base
       self.save!
       p "Submitted #{type} HIT for annotation #{id} with id #{rturk_hit.id} "
       return rturk_hit
-    rescue StandardError => e
+    rescue RTurk::RTurkError => e
       p e
       p "Error submitting annotation #{id} - rerun to try again" and return
     end

@@ -2,7 +2,7 @@
 <% cat_pretty = @category.name.humanize.downcase %>
 <div class = "instructions">
   <h1>Annotate the <%= cat_pretty %> in the image.</h1>
-  <p>Resize the rectangle so it tightly bounds the <em><%=cat_pretty %></em> in the picture. If there is more than one <%=cat_pretty %> in the image, choose one. If the object is not fully in the image, bound as much of the bottle as you can.</p> 
+  <p>Resize the rectangle so it tightly bounds the <em><%=cat_pretty %></em> in the picture. If there is more than one <%=cat_pretty %> in the image, choose one. If the object is not fully in the image, bound as much of the object as you can.</p> 
   <% if @preview %>
     <p>
       <strong>This is a preview.</strong> Once you begin this task, you will see a button to submit your annotation here.
