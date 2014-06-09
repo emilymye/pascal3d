@@ -82,7 +82,7 @@ namespace :mturk do
     hit_param_types = {mesh: mesh_params, orientation: orientation_params, keypoint: keypoint_params}
 
     count = 0
-    Annotation.where( "stage < ? and not submitted", Annotation::STAGES[:complete]).each do |a|
+    Annotation.where( "stage < ? and submitted = 'f'", Annotation::STAGES[:complete]).each do |a|
       rturk_hit = a.submit_hit(hit_param_types)
       count = count+1 unless rturk_hit.nil?
     end
