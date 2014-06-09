@@ -123,8 +123,8 @@ class Annotation < ActiveRecord::Base
 
     begin
       rturk_hit = create_hit(hit_params, url)
-      annotation.submitted = true
-      annotation.save!
+      self.submitted = true
+      self.save!
       p "Submitted #{type} HIT for annotation #{id} with id #{rturk_hit.id} "
       return rturk_hit
     rescue StandardError => e
