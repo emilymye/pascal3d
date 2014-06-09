@@ -127,8 +127,9 @@ class Annotation < ActiveRecord::Base
       annotation.save!
       p "Submitted #{type} HIT for annotation #{id} with id #{rturk_hit.id} "
       return rturk_hit
-    rescue
-      p "Error submitting annotation #{id} - rerun to try again " and return
+    rescue StandardError => e
+      p e
+      p "Error submitting annotation #{id} - rerun to try again" and return
     end
   end
 
