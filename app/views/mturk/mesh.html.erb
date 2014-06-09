@@ -13,7 +13,11 @@
     <div class= "instructions">
       <h1>Match a 3D model to the object.</h1>
       <p>Choose the model that most closely resembles the indicated <%= cat_pretty %> (within the red box) in the photo. Scroll left/right in the box below to see all options.</p>
+      <%if @preview %>
+      You will see a submit button here once you have accepted the task.
+      <%else %>
       <%= submit_tag 'Submit', :class => "hide btn btn-green" %>
+      <%end%>
     </div>
     <div class= "images">
       <%= render :partial => "annotated_image", :locals => { :img_file => @annotation.image_file, :annotation => @annotation } %>
@@ -46,7 +50,7 @@ $(function(){
     toLoad--;
     console.log("Meshes to load: " + toLoad);
     $("#" + canvasid).next().hide();
-    if (toLoad <= 0){
+    if (toLoad <= 0 && <%= @preview %>){
       $("input[type='submit']").show();
     }
   }
@@ -63,9 +67,6 @@ $(function(){
       }
     });
   });
-
-
-
 })
 
 </script>

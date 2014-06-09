@@ -43,8 +43,6 @@ class Annotation < ActiveRecord::Base
 
   def check_mesh
     return unless has_mesh?
-    p self.category.meshes
-    p self
     if !self.category.meshes.include?(self.mesh)
       self.errors[:base] << "Invalid mesh #{self.mesh} for category #{self.category.name}"
     end
