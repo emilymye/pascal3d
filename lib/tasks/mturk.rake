@@ -123,8 +123,8 @@ namespace :mturk do
           when "bounding_box"
             annotation = Annotation.new_from_hit(answers)
           when "mesh", "orientation", "keypoints"
-            aid = answers["annotation_id"]
-            annotation = Annotation.find_by_id(aid)
+            aid = answers["annotation_id"].to_i
+            annotation = Annotation.find(aid)
             if @annotation.nil?
               p "Error, no annotation with id #{aid}"
               assignment.reject!
