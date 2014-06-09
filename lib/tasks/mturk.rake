@@ -125,7 +125,7 @@ namespace :mturk do
           when "mesh", "orientation", "keypoints"
             aid = answers["annotation_id"].to_i
             annotation = Annotation.find(aid)
-            if @annotation.nil?
+            if annotation.nil?
               p "Error, no annotation with id #{aid}"
               assignment.reject!
               next
