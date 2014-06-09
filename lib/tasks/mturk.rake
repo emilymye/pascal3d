@@ -60,7 +60,7 @@ namespace :mturk do
         abort("invalid category") if Category.find_by_name(category).nil?
         abort("bounding_box hit format not found in config/hits") if hit_params.nil?
 
-        queryparams = {:image => image_path, :category => category }
+        queryparams = {:image => image_path, :category => category}
 
         url = INIT_CONFIG["HOST_BASE_URL"] + "mturk/new_annotation?" + queryparams.to_query
         hit = create_hit(hit_params,url)
@@ -82,7 +82,7 @@ namespace :mturk do
     hit_param_types = {mesh: mesh_params, orientation: orientation_params, keypoint: keypoint_params}
 
     count = 0
-    Annotation.where( "stage < ?", Annotation::STAGE[:complete], :submitted => false ).each do |a|
+    Annotation.where( "stage < ?", Annotation::STAGES[:complete], :submitted => false ).each do |a|
       rturk_hit = a.submit_hit(hit_param_types)
       count = count+1 unless rturk_hit.nil?
     end
