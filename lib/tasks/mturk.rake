@@ -144,4 +144,14 @@ namespace :mturk do
       hit.dispose!
     end
   end
+
+  desc 'reset all annotations and delete hits'
+  task :delete_all => :environment do
+    Annotation.update_all(submitted: false)
+    hits = RTurk::Hit.all
+    hits.each do |h|
+      h.expire!
+      h.dispose!
+    end
+  end
 end
