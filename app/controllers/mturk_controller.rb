@@ -30,13 +30,7 @@ class MturkController < ApplicationController
     type = params[:task]
 
     if type == "bounding_box"
-      @annotation = Annotation.new
-      @annotation.image_file = params[:image_file]
-      @annotation.category_name = params[:category_name]
-      @annotation.x0 = params[:x0]
-      @annotation.x1 = params[:x1]
-      @annotation.y0 = params[:y0]
-      @annotation.y1 = params[:y1]
+      @annotation = Annotation.new_from_hit(params)
       if @annotation.save
         render :text => "Annotation was successfully created" and return
       else 

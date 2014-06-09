@@ -77,4 +77,80 @@ class Annotation < ActiveRecord::Base
     return self.stage > STAGES[:keypoints]
   end
 
+  def self.new_from_hit(answers)
+    annotation = Annotation.new
+    annotation.image_file = answers["image_file"]
+    annotation.category_name = answers["category_name"]
+    annotation.x0 = answers["x0"].to_i
+    annotation.x1 = answers["x1"].to_i
+    annotation.y0 = answers["y0"].to_i
+    annotation.y1 = answers["y1"].to_i
+
+    return annotation
+  end
+
+  def update_from_hit(type, answers)
+    if type == "mesh"
+      self.mesh = answers["mesh_file"]
+      p "Error, no such mesh #{@annotation.mesh}" and return unless category.meshes.include?(answers["mesh_file"])
+    elsif type == "orientation"
+      self.elevation = answers["elevation"]
+      self.azimuth = answers["azimuth"]
+      self.keypoint_matches = JSON.parse(answers["keypoint_matches"])
+      self.keypoint_matches.each do |k,v|
+        v["px"] = nil
+        v["py"] = nil
+      end
+    elsif type == "keypoints"
+      self.keypoint_matches = JSON.parse(answers["keypoint_matches"])
+    end
+
+    self.stage = self.stage + 1
+  end
+
+  def submit_hit(params)
+    case stage
+    when STAGES[:mesh]
+      type = "mesh"
+    when STAGES[:orientation]
+      type = "orientation"
+    when STAGES[:keypoints]
+      type = "keypoints"
+    end
+
+    hit_params = params[type]|| YAML::load_file('config/hits/' + type + '.yml')
+    url = INIT_CONFIG["HOST_BASE_URL"] + "mturk/edit_annotation/#{id}"
+
+    begin
+      rturk_hit = create_hit(hit_params, url)
+      annotation.submitted = true
+      annotation.save!
+      p "Submitted #{type} HIT for annotation #{id} with id #{rturk_hit.id} "
+      return rturk_hit
+    rescue
+      p "Error submitting annotation #{a.id} - rerun to try again " and return
+    end
+  end
+
+
+  def export
+    # image_file, category_name, x0, x1, y0, y1, mesh, elevation, azimuth, keypoint_matches, created_at, updated_at
+    
+    arr = [ 
+      image_file,
+      category_name,
+      x0, x1, y0, y1,
+      mesh,
+      elevation,
+      azimuth,
+      keypoints.count
+    ]
+
+    keypoint_matches.each do |k,v| 
+      arr << k << v.px << v.py << v.x << v.y << v.z
+    end
+
+    return arr
+  end
+
 end
