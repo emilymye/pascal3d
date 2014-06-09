@@ -149,12 +149,15 @@ namespace :mturk do
   task :delete_all => :environment do
     Annotation.update_all(submitted: false)
     hits = RTurk::Hit.all
+    p "Approving all assignments"
     hits.each do |h|
       h.assignments.each do |a|
-        assignment.approve! if assignment.status == 'Submitted'
+        a.approve! if a.status == 'Submitted'
       end
       h.expire!
       h.dispose!
     end
+
+    p "#{hits.count} HITS deleted" 
   end
 end
