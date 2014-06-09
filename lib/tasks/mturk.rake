@@ -150,7 +150,7 @@ namespace :mturk do
     Annotation.update_all(submitted: false)
     hits = RTurk::Hit.all
     hits.each do |h|
-      h.assignments each do |a|
+      h.assignments.each do |a|
         assignment.approve! if assignment.status == 'Submitted'
       end
       h.expire!
