@@ -35,7 +35,10 @@ class Annotation < ActiveRecord::Base
   validates :mesh,      :with => :check_mesh
   validates :keypoint_matches, :with => :check_keypoints
   validates_presence_of :elevation, :azimuth, :with => :has_orientation?
-
+  validates :stage, :numericality => { only_integer: true, 
+                                       greater_than_or_equal_to: STAGES[:mesh],
+                                       less_than_or_equal_to: STAGES[:complete]
+                                     }
   
   def approve?
     true
@@ -114,9 +117,11 @@ class Annotation < ActiveRecord::Base
       type = "orientation"
     when STAGES[:keypoints]
       type = "keypoints"
+    when STAGES[:complete]
+      p "Annotation"
     end
 
-    hit_params = params[type]|| YAML::load_file('config/hits/' + type + '.yml')
+    hit_params = params[type]|| YAML::load_file('config/hits/#{ type }.yml')
     url = INIT_CONFIG["HOST_BASE_URL"] + "mturk/edit_annotation/#{id}"
 
     begin

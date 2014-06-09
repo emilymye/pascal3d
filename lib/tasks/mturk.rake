@@ -141,7 +141,9 @@ namespace :mturk do
         if annotation.save
           assignment.approve! if assignment.status == 'Submitted'
           p "Annotation was successfully updated"
-          annotation.submit_hit(hit_param_types) if (autosubmit)
+          if (autosubmit and annotation.stage != Annotation::STAGES[:complete])
+            annotation.submit_hit(hit_param_types) 
+          end
         else 
           p annotation.errors
           p "Annotation rejected, rejecting assignment"
