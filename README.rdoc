@@ -1,28 +1,92 @@
-== README
+== Image Annotator (Stanford CS399)
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Web-based image annotation application
+This tool allows annotation of images using {Amazon Mechanical Turk.}[https://www.mturk.com/mturk/welcome].  Tasks include:
 
-Things you may want to cover:
+* Annotating photos with bounding boxes
+* Associating bound objects/photos with 3D meshes
+* Orienting a 3D mesh to match an object in a photo
+* Matching keypoints on the photo and a 3D mesh
 
-* Ruby version
+This app is based on RoR (Ruby 2.1, Rails 4.0) and uses {rTurk}[https://github.com/ryantate/rturk], a Ruby wrapper around the Amazon Mechanical Turk API.
 
-* System dependencies
+=== Setup/Installation 
+---
 
-* Configuration
+STEPS:
+    1. Install Ruby 2.1.2, Rails 4.0.0, and sqlite3 as specified {here}[http://rubyonrails.org/download] or {here}[http://www.stanford.edu/class/cs142/cgi-bin/railsInstall.php]. I actually did not use rvm (installed from source) because I couldn't install a multiuser version and the single-user version is complicated with Stanford bash-profiles.
+  
 
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+SERVER-SPECIFIC:
+    1. Install Phusion Passenger:
+    sudo gem install passenger
+    sudo passenger-install-apache2-module
 
 
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
+==== DEPENDENCIES
+
+
+This project requires you Ruby 2.0.0, Rails 3.2.1, and sqlite3.
+
+    - To install ruby/rails, follow setup as suggested {here}[http://rubyonrails.org/download] or {here}[http://www.stanford.edu/class/cs142/cgi-bin/railsInstall.php]. 
+
+    - Install sqlite3 as specified by Linux distribution (for example, apt-get with Ubuntu)
+
+We 
+
+===== INSTALLATION/SETUP
+
+Sign up for an account on {AWS}[http://aws.amazon.com/] and and a {Requester account for Mechanical Turk}[https://requester.mturk.com/]. You can test your MT HITS using https://requestersandbox.mturk.com/ and https://workersandbox.mturk.com/.
+
+Create a file config/config.yml to contain your AWS credentials. Replace the Key ID and Access Key with your personal key (accessible from {here.}[https://aws-portal.amazon.com/gp/aws/developer/account/index.html?action=access-key]).DO NOT SHARE THIS FILE WITH ANYONE.
+See example.config.yml in config/ for examples. You will also be able to set up the host base url for your server that AMT will attempt to load content from into an iframe.
+
+NOTE: AMT loads our content as an ExternalQuestion type in an iframe. To prevent CSRF, if the iframe source is not using https Chrome will leave the iframe blank. Make sure the host base url starts with https://
+
+
+
+    bundle install
+    rails g turkee --skip
+
+This last command generates a file in config/initializers, turkee.rb which contains our AWS credentials. 
+DO NOT CHECK THIS INTO SC OR SHARE YOUR KEYS WITH ANYONE.
+
+
+    AWSACCESSKEYID      = 'XXXXXXXXXXXXXXXXXX'
+    AWSSECRETACCESSKEY  = 'YYYYYYYYYYYYYYYYYYYYYYYYYYYY'
+
+    RTurk::logger.level     = Logger::DEBUG
+    RTurk.setup(AWSACCESSKEYID, AWSSECRETACCESSKEY, :sandbox => (Rails.env == 'production' ? false : true))
+
+
+Replace the Key ID and Access Key with your personal key (accessible from {here.}[https://aws-portal.amazon.com/gp/aws/developer/account/index.html?action=access-key])
+
+
+======= Database
+
+Finally, set up our database and to import the model data and category data, we need to run
+
+    rake db:migrate
+    rake db:seed
+
+
+==== IMPORTING IMAGES
+
+lib/tasks contains a images.yml file with some sample images; the format should be
+    
+    category:
+     - file_url_or_path_1
+     - file_url_or_path_2
+     ...
+
+Run
+    
+    rake import:images 
+
+to create Image objects for annotations.
+
+=== Deployment
+
+TODO
+
+
