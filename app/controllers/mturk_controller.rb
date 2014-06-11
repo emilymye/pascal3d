@@ -26,8 +26,10 @@ class MturkController < ApplicationController
   end
 
   def test_form
-    if !INIT_CONFIG[HOST_BASE_URL].starts_with?("localhost")
-      render :text => "You are not using Mechanical Turk - input rejected."
+    if !INIT_CONFIG["HOST_BASE_URL"].starts_with?("localhost")
+      render :text => "You are not using Mechanical Turk - input rejected." and return
+    end
+
     type = params[:task]
     if type == "bounding_box"
       @annotation = Annotation.new_from_hit(params)
@@ -78,7 +80,6 @@ protected
     else
       @formurl = "/mturk/test_form"
     end
-
   end
 
   def set_annotation

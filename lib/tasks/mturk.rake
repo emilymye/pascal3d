@@ -2,6 +2,9 @@ require 'csv'
 
 namespace :mturk do
   def create_hit(hit_params, url)
+    if INIT_CONFIG["HOST_BASE_URL"].starts_with?("localhost")
+      p "running on localhost...not submitting to MTurk" and return
+    end
     begin
       rturk_hit = RTurk::Hit.create(:title => hit_params[:title] ) do |hit|
         hit.description = hit_params[:description]

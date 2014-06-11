@@ -26,10 +26,10 @@ class Annotation < ActiveRecord::Base
   serialize :keypoint_matches, Hash
 
   STAGES = {
-    :mesh         => 0,
-    :orientation  => 1,
-    :keypoints    => 2,
-    :complete     => 3
+    :mesh         => 1,
+    :orientation  => 2,
+    :keypoints    => 3,
+    :complete     => 4
   }
 
   validates :mesh,      :with => :check_mesh
