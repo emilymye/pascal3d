@@ -15,14 +15,12 @@ namespace :annotation do
     completed = Annotation.where(stage: Annotation::STAGES[:complete])
     p "No annotations to export (still incomplete: #{Annotation.count})" and next if completed.empty?
 
-    count = 0
     CSV.open("results/" + file, "wb") do |csv|
       completed.each do |annotation|
         csv << annotation.export
       end
     end
     p "Written to results/#{file}"
-    p "#{count} annotations deleted" if delete
   end
 
   desc 'export all completed annotations - takes file name and one of ["bounding_box", "mesh", "orientation", "keypoints"] for last finished task. Keypoints is the same as complete.'
