@@ -73,15 +73,21 @@ This app is based on RoR (Ruby 2.1, Rails 4.0) and uses {rTurk}[https://github.c
     sudo a2ensite www.yourapp.com
     sudo /etc/init.d/apache2 restart
     
-=== Using with AMT
 
-1. Sign up for an account on {AWS}[http://aws.amazon.com/] and and a {Requester account for Mechanical Turk}[https://requester.mturk.com/]. You can test your MT HITS using https://requestersandbox.mturk.com/ and https://workersandbox.mturk.com/.
-2. Create a file config/config.yml to contain your AWS credentials - see example.config.yml in config/ for format. Do not check in/share this file.
-*Replace the Key ID and Access Key with your personal key (accessible from {here.}[https://aws-portal.amazon.com/gp/aws/developer/account/index.html?action=access-key]).
-*You will also be able to set up the host base url for your server that AMT will attempt to load content from into an iframe. AMT loads our content as an ExternalQuestion type in an iframe. To prevent CSRF, if the iframe source is not using https Chrome will leave the iframe blank. Make sure the host base url starts with https://
+=== Setup for AMT
+Sign up for an account on {AWS}[http://aws.amazon.com/] and and a {Requester account for Mechanical Turk}[https://requester.mturk.com/]. You can test your MT HITS using https://requestersandbox.mturk.com/ and https://workersandbox.mturk.com/. <b>Switch to sandbox/production by changing  lib/rturk.rb </b>
 
-=== Worker Sandbox vs Real tests
-If the server is in production mode, your form will post to a url at Mechanical Turk - otherwise, it uses the worker sandbox. To change the mode of the server, go to your Apache Virtualhost and change the two RailsEnv declartions:
-    # Also takes test, production
-    RailsEnv development
-        
+      <li>Create a file config/config.yml to contain your AWS credentials - see example.config.yml in config/ for format. Do not check in/share this file
+        <ul>
+          <li>
+            Replace the Key ID and Access Key with your personal key (accessible from {here.}[https://aws-portal.amazon.com/gp/aws/developer/account/index.html?action=access-key]).
+          </li>
+          <li>
+            You will also be able to set up the host base url for your server that AMT will attempt to load content from into an iframe. AMT loads our content as an ExternalQuestion type in an iframe. To prevent CSRF, if the iframe source is not using https Chrome will leave the iframe blank. Make sure the host base url starts with https://
+          </li>
+        </ul>
+      </li>
+      <li>
+        If you already have a server running, restart it (sudo service apache2 restart).
+      </li>
+    </ol>

@@ -8,8 +8,9 @@ development:
     AWS_ACCESS_KEY_ID:        'xxxxx'
     AWS_SECRET_ACCESS_KEY:    'xxxxx'
     # The base url for this deployment (needed for rake tasks)
-    HOST_BASE_URL:            'https://pascal3d.stanford.edu/'
-    USE_SANDBOX:              true
+    HOST_BASE_URL:            'https://pascal3d.stanford.edu/' 
+                              #set to localhost:3000 for local dev
+                              #note you can't test on sandbox with localhost
 test:
     # copy development verbatim
 
