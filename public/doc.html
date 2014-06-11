@@ -15,6 +15,7 @@
       <li><a href="#reset">reset</a></li>
     </ul></li>
     <li><a href="#mturk">annotation</a><ul>
+      <li><a href="#mturk">export_complete</a></li>
       <li><a href="#mturk">export</a></li>
       <li><a href="#mturk">delete_complete</a></li>
     </ul></li>
@@ -24,10 +25,32 @@
 <div class="container">
   <h1>Documentation for Pascal3D</h1>
   <div id="raketasks">
-    <h2>Commands</h2>
+    <h2>Setup for AMT</h2>
+    <ol>
+      <li>Sign up for an account on {AWS}[http://aws.amazon.com/] and and a {Requester account for Mechanical Turk}[https://requester.mturk.com/]. You can test your MT HITS using https://requestersandbox.mturk.com/ and https://workersandbox.mturk.com/.
+      <li>
+        <strong>Switch to sandbox/production by changing lib/rturk.rb </strong>
+      </li>
+      <li>Create a file config/config.yml to contain your AWS credentials - see example.config.yml in config/ for format. Do not check in/share this file
+        <ul>
+          <li>
+            Replace the Key ID and Access Key with your personal key (accessible from {here.}[https://aws-portal.amazon.com/gp/aws/developer/account/index.html?action=access-key]).
+          </li>
+          <li>
+            You will also be able to set up the host base url for your server that AMT will attempt to load content from into an iframe. AMT loads our content as an ExternalQuestion type in an iframe. To prevent CSRF, if the iframe source is not using https Chrome will leave the iframe blank. Make sure the host base url starts with https://
+          </li>
+        </ul>
+      </li>
+      <li>
+        If you already have a server running, restart it (sudo service apache2 restart).
+      </li>
+    </ol>
+  <h2>Commands</h2>
     <p>Generally, all interaction with AMT is done through Rake tasks. Documentation for Rake can be found <a href="http://docs.seattlerb.org/rake/">here</a>.</p></p>In general, run a rake task with command</p>
     <pre>rake &lt;namespace&gt;:&lt;cmd&gt;[ arg1, "stringarg2", ... ]</pre>
     <p> These tasks are found in lib/rake/filename.rake - if you want to add functionality for working with AMT, here is a good place.</p>
+
+
     <h3 class="header" id="mturk">mturk</h3>
     
     <div id="submit_list">
@@ -80,13 +103,52 @@
       <pre>rake mturk:reset[]</pre>
       <div class="desc"> 
         <p>
-          Clears all HITs and sets all annotations to "not submitted" - unfinished annotations will be resubmitted in HIT for the same task type.
+          Clears all HITs and sets all annotations to "not submitted" - unfinished annotations will be resubmitted in HIT for the same task type. Use sparingly, and not during production!
         </p>
       </div>
     </div>
 
-    <h3 class="header" id="mturk">mturk</h3>
-  
+    <h3 class="header" id="annotation">annotation</h3>
+      <div id="export_complete">
+        <pre>rake annotation:export_complete[  "output.csv" ]</pre>
+        <div class="desc"> 
+          <p>
+            Finds all completed annotations and outputs to a CSV file with format: 
+            <br/>
+            [ image_file, category, x0, x1, y0, y1, meshfile, elevation.to_f, azimuth.to_f, keypoint_matches.count, keypoint name 1, picturex, picturey, x, y, z, keypoint name 2, picturex, picturey, x, y, z, ...]
+            <br/>
+            Assume all pixel values are out of 400/300. The first 10 columns are set, and there are 6 more columns for each keypoint match with the name, (x,y) on the picture (scaled to 400 by 300px) and world (x,y,z).
+          </p>
+          <dl class="params">
+            <dt><em>string</em> <strong>filename</strong></dt>
+            <dd>Optional; Name of output CSV file, defaults to "annotation_results.csv" </dd>
+          </dl>
+        </div>
+
+      </div>
+      <div id="export_by_task">
+        <pre>rake annotation:export_by_task[ "type", "output.csv" ]</pre>
+        <div class="desc"> 
+          <p>
+            Finds all annotations of a specific type (see param task_type) and outputs to CSV file. "keypoints" option is the same as export_complete
+          </p>
+          <dl class="params">
+            <dt><em>string</em> <strong>task_type</strong></dt>
+            <dd>One of "bounding_box", "mesh", "orientation", "keypoints"</dd>
+            <dt><em>string</em> <strong>filename</strong></dt>
+            <dd>Optional; Name of output CSV file, defaults to "annotation_results.csv"</dd>
+          </dl>
+        </div>
+
+      </div>  
+      <div id="delete_complete">
+        <pre>rake annotation:delete_complete[]</pre>
+        <div class="desc"> 
+          <p>
+            Deletes all complete annotations - it is assumed that you have already exported these annotations and are cleaning up.
+          </p>
+        </div>
+      </div>
 
 
   </div>
