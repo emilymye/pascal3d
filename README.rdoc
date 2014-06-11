@@ -12,8 +12,7 @@ This app is based on RoR (Ruby 2.1, Rails 4.0) and uses {rTurk}[https://github.c
 
 === Setup 
 ===== Installing dependencies for Ruby on Rails app w/ Passenger, Apache
-1. Install Ruby 2.1.2, Rails 4.0.0, as specified {here}[http://rubyonrails.org/download] or {here}[http://www.stanford.edu/class/cs142/cgi-bin/railsInstall.php].
-(I actually did not use rvm (installed from source) because I couldn't install a multiuser version)
+1. Install Ruby 2.1.2, Rails 4.0.0, as specified {here}[http://rubyonrails.org/download] or {here}[http://www.stanford.edu/class/cs142/cgi-bin/railsInstall.php]. (I actually did not use rvm (installed from source) because I couldn't install a multiuser version)
 
 2. Install sqlite3 and ruby gem.
     sudo apt-get install sqlite3 libsqlite3-dev
@@ -41,8 +40,7 @@ This app is based on RoR (Ruby 2.1, Rails 4.0) and uses {rTurk}[https://github.c
 9. Enable Apache rewrite module and ssh module
     sudo a2enmod rewrite
     sudo a2enmod ssl
-10. Add a VirtualHost to your Apache configuration. I created a new site config file in /etc/apache2/sites-available/pascal3d. 
-Make sure your VirtualHost root is to the public folder of the repo. Also, add the cert and key file locations.
+10. Add a VirtualHost to your Apache configuration. Make sure your VirtualHost root is to the public folder of the repo, and point the SSL configs to your .cert/.key file.
     <VirtualHost *:80>
         
         RailsEnv development
@@ -70,9 +68,20 @@ Make sure your VirtualHost root is to the public folder of the repo. Also, add t
         SSLCertificateFile <.cert file>
         SSLCertificateKeyFile <.key file>
     </VirtualHost>
-11. Enable your new site and restart Apache:
+
+10. Enable your new site and restart Apache:
     sudo a2ensite www.yourapp.com
     sudo /etc/init.d/apache2 restart
+    
+=== Using with AMT
 
+1. Sign up for an account on {AWS}[http://aws.amazon.com/] and and a {Requester account for Mechanical Turk}[https://requester.mturk.com/]. You can test your MT HITS using https://requestersandbox.mturk.com/ and https://workersandbox.mturk.com/.
+2. Create a file config/config.yml to contain your AWS credentials - see example.config.yml in config/ for format. Do not check in/share this file.
+*Replace the Key ID and Access Key with your personal key (accessible from {here.}[https://aws-portal.amazon.com/gp/aws/developer/account/index.html?action=access-key]).
+*You will also be able to set up the host base url for your server that AMT will attempt to load content from into an iframe. AMT loads our content as an ExternalQuestion type in an iframe. To prevent CSRF, if the iframe source is not using https Chrome will leave the iframe blank. Make sure the host base url starts with https://
 
-
+=== Worker Sandbox vs Real tests
+If the server is in production mode, your form will post to a url at Mechanical Turk - otherwise, it uses the worker sandbox. To change the mode of the server, go to your Apache Virtualhost and change the two RailsEnv declartions:
+    # Also takes test, production
+    RailsEnv development
+        
