@@ -1,0 +1,97 @@
+<html>
+<head>
+  <title>Pascal3D Documentation</title>
+  <link rel="stylesheet" type="text/css" href="doc.css"/>
+</head>
+<body>
+<div class="sidebar">
+  <h4>Tasks</h4>
+  <ul class="nav">
+    <li><a href="#mturk">mturk</a><ul>
+      <li><a href="#submit_list">submit_list</a></li>
+      <li><a href="#submit_image">submit_image</a></li>
+      <li><a href="#sync_all">sync_all</a></li>
+      <li><a href="#resubmit">resubmit</a></li>
+      <li><a href="#reset">reset</a></li>
+    </ul></li>
+    <li><a href="#mturk">annotation</a><ul>
+      <li><a href="#mturk">export</a></li>
+      <li><a href="#mturk">delete_complete</a></li>
+    </ul></li>
+  </ul>
+</div>
+
+<div class="container">
+  <h1>Documentation for Pascal3D</h1>
+  <div id="raketasks">
+    <h2>Commands</h2>
+    <p>Generally, all interaction with AMT is done through Rake tasks. Documentation for Rake can be found <a href="http://docs.seattlerb.org/rake/">here</a>.</p></p>In general, run a rake task with command</p>
+    <pre>rake &lt;namespace&gt;:&lt;cmd&gt;[ arg1, "stringarg2", ... ]</pre>
+    <p> These tasks are found in lib/rake/filename.rake - if you want to add functionality for working with AMT, here is a good place.</p>
+    <h3 class="header" id="mturk">mturk</h3>
+    
+    <div id="submit_list">
+      <pre>rake mturk:submit_list["foo.csv"]</pre>
+      <div class="desc"> 
+        <p>Submit a list of images to make HITs for bounding boxes tasks. This is like creating a new annotation, although new annotations are actually only created when we recieve answers with a bounding box.</p>
+        <dl class="params">
+          <dt><em>String</em> <strong>csv_file_name</strong></dt>
+          <dd>Name of CSV file with two columns: image_path, aeroplane. Example: 'annotate/aeroplane/plane.jpg',"aeroplane" If loading from images folder, do not put leading dash in image path.</dd>
+        </dl>
+      </div>
+    </div>
+
+    <div id="submit_image">
+      <pre>rake mturk:submit_image["path/to/img", "category_name"]</pre>
+      <div class="desc"> 
+        <p>Submit one single images to make HITs for bounding boxes tasks.</p>
+        <dl class="params">
+          <dt><em>String</em> <strong>image_path</strong></dt>
+          <dd>path to image</dd>
+          <dt><em>String</em> <strong>category</strong></dt>
+          <dd>Category name</dd>
+        </dl>
+      </div>
+    </div>
+
+    <div id="sync_all">
+      <pre>rake mturk:sync_all[ autosubmit? ]</pre>
+      <div class="desc"> 
+        <p>
+          Connects to AMT and finds all reviewable HITs and their assignments. Reads answers and creates a new Annotation object or edits a current one (see app/models/annotation.rb). Currently auto-approves if annotation can be created/edited, using Ruby validation methods. 
+        </p>
+        <dl class="params">
+          <dt><em>bool</em> <strong>autosubmit</strong></dt>
+          <dd>Submit new HITs automatically (essentially, mturk:resubmit) - defaults to false</dd>
+        </dl>
+      </div>
+    </div>
+
+    <div id="resubmit">
+      <pre>rake mturk:resubmit[ autosubmit? ]</pre>
+      <div class="desc"> 
+        <p>
+          Finds annotations that have not been submitted and are ready for next task, and creates new HITs. Can be done automatically in sync_all, but in case you want to check data you can do that here.
+        </p>
+      </div>
+    </div>
+
+    <div id="reset">
+      <pre>rake mturk:reset[]</pre>
+      <div class="desc"> 
+        <p>
+          Clears all HITs and sets all annotations to "not submitted" - unfinished annotations will be resubmitted in HIT for the same task type.
+        </p>
+      </div>
+    </div>
+
+    <h3 class="header" id="mturk">mturk</h3>
+  
+
+
+  </div>
+
+</div>
+
+</body>
+</html>

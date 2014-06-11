@@ -22,27 +22,8 @@ namespace :mturk do
     end
   end
 
-  desc 'submit an image; format mturk:submit_image[image_path,category]'
-  task :submit_image, [:image_path, :category] => :environment do |t, args|
-    image_path = args[:image_path]
-    category = args[:category]
-    abort("two arguments expected: image path, category") if category.nil? or image_path.nil?
-    abort("image file not found in app/assets/images") if Rails.application.assets.find_asset(image_path).nil?
-    abort("invalid category") if Category.find_by_name(category).nil?
-  
-    hit_params = YAML::load_file('config/hits/bounding_box.yml' )
-    abort("bounding_box hit format not found in config/hits") if hit_params.nil?
-
-    queryparams = {:image => image_path, :category => "aeroplane"}
-
-    url = INIT_CONFIG["HOST_BASE_URL"] + "mturk/new_annotation?" + queryparams.to_query
-    hit = create_hit(hit_params,url)
-    p "Successfully submitted hit #{hit.id}"
-  end
-
-
   desc 'Read csv file of images (filename, category) and creates new bounding box HITS'
-  task :process_list, [:image_list ] => :environment do |t, args|
+  task :submit_list, [:image_list ] => :environment do |t, args|
     hit_params = YAML::load_file('config/hits/bounding_box.yml' )
     abort("bounding_box hit format not found in config/hits") if hit_params.nil?
 
@@ -74,30 +55,28 @@ namespace :mturk do
     end
   end
 
-  desc 'submit annotations ready to be edited'
-  task :submit_annotations => :environment do |t,args|
-    mesh_params = YAML::load_file('config/hits/mesh.yml' )
-    orientation_params = YAML::load_file('config/hits/orientation.yml' )
-    keypoint_params = YAML::load_file('config/hits/keypoints.yml' )
-    hit_param_types = {mesh: mesh_params, orientation: orientation_params, keypoint: keypoint_params}
 
-    count = 0
+  desc 'submit an image; format mturk:submit_image[image_path,category]'
+  task :submit_image, [:image_path, :category] => :environment do |t, args|
+    image_path = args[:image_path]
+    category = args[:category]
+    abort("two arguments expected: image path, category") if category.nil? or image_path.nil?
+    abort("image file not found in app/assets/images") if Rails.application.assets.find_asset(image_path).nil?
+    abort("invalid category") if Category.find_by_name(category).nil?
+  
+    hit_params = YAML::load_file('config/hits/bounding_box.yml' )
+    abort("bounding_box hit format not found in config/hits") if hit_params.nil?
 
-    to_submit = Annotation.where( "stage < ? and submitted = 'f'", Annotation::STAGES[:complete])
-    if (to_submit.count == 0)
-      p "No annotation to submitted"
-      next
-    end
+    queryparams = {:image => image_path, :category => "aeroplane"}
 
-    to_submit.each do |a|
-      rturk_hit = a.submit_hit(hit_param_types)
-      count = count+1 unless rturk_hit.nil?
-    end
-    p "#{count} annotations successfully submitted"
+    url = INIT_CONFIG["HOST_BASE_URL"] + "mturk/new_annotation?" + queryparams.to_query
+    hit = create_hit(hit_params,url)
+    p "Successfully submitted hit #{hit.id}"
   end
 
+
   desc 'sync Mechanical Turk HITs'
-  task :sync, [ :autosubmit ] => :environment do |t, args|
+  task :sync_all, [ :autosubmit ] => :environment do |t, args|
     autosubmit = args[:autosubmit] || false
     hit_param_types = {}
     if (autosubmit)
@@ -155,8 +134,31 @@ namespace :mturk do
     end
   end
 
+
+  desc 'submit annotations ready to be edited'
+  task :resubmit => :environment do |t,args|
+    mesh_params = YAML::load_file('config/hits/mesh.yml' )
+    orientation_params = YAML::load_file('config/hits/orientation.yml' )
+    keypoint_params = YAML::load_file('config/hits/keypoints.yml' )
+    hit_param_types = {mesh: mesh_params, orientation: orientation_params, keypoint: keypoint_params}
+
+    count = 0
+
+    to_submit = Annotation.where( "stage < ? and submitted = 'f'", Annotation::STAGES[:complete])
+    if (to_submit.count == 0)
+      p "No annotation to submitted"
+      next
+    end
+
+    to_submit.each do |a|
+      rturk_hit = a.submit_hit(hit_param_types)
+      count = count+1 unless rturk_hit.nil?
+    end
+    p "#{count} annotations successfully submitted"
+  end
+  
   desc 'reset all annotations and delete hits'
-  task :delete_all => :environment do
+  task :reset => :environment do
     Annotation.update_all(submitted: false)
     hits = RTurk::Hit.all
     p "#{hits.count} HITS to delete, approving all assignments"
