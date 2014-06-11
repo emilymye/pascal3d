@@ -10,83 +10,78 @@ This tool allows annotation of images using {Amazon Mechanical Turk.}[https://ww
 
 This app is based on RoR (Ruby 2.1, Rails 4.0) and uses {rTurk}[https://github.com/ryantate/rturk], a Ruby wrapper around the Amazon Mechanical Turk API.
 
-=== Setup/Installation 
----
+=== Setup 
+===== Installing dependencies for Ruby on Rails app w/ Passenger, Apache
+1. Install Ruby 2.1.2, Rails 4.0.0, as specified {here}[http://rubyonrails.org/download] or {here}[http://www.stanford.edu/class/cs142/cgi-bin/railsInstall.php]. (I actually did not use rvm (installed from source) because I couldn't install a multiuser version)
 
-STEPS:
-    1. Install Ruby 2.1.2, Rails 4.0.0, and sqlite3 as specified {here}[http://rubyonrails.org/download] or {here}[http://www.stanford.edu/class/cs142/cgi-bin/railsInstall.php]. I actually did not use rvm (installed from source) because I couldn't install a multiuser version and the single-user version is complicated with Stanford bash-profiles.
-  
-
-SERVER-SPECIFIC:
-    1. Install Phusion Passenger:
-    sudo gem install passenger
-    sudo passenger-install-apache2-module
-
-
-==== DEPENDENCIES
-
-
-This project requires you Ruby 2.0.0, Rails 3.2.1, and sqlite3.
-
-    - To install ruby/rails, follow setup as suggested {here}[http://rubyonrails.org/download] or {here}[http://www.stanford.edu/class/cs142/cgi-bin/railsInstall.php]. 
-
-    - Install sqlite3 as specified by Linux distribution (for example, apt-get with Ubuntu)
-
-We 
-
-===== INSTALLATION/SETUP
-
-Sign up for an account on {AWS}[http://aws.amazon.com/] and and a {Requester account for Mechanical Turk}[https://requester.mturk.com/]. You can test your MT HITS using https://requestersandbox.mturk.com/ and https://workersandbox.mturk.com/.
-
-Create a file config/config.yml to contain your AWS credentials. Replace the Key ID and Access Key with your personal key (accessible from {here.}[https://aws-portal.amazon.com/gp/aws/developer/account/index.html?action=access-key]).DO NOT SHARE THIS FILE WITH ANYONE.
-See example.config.yml in config/ for examples. You will also be able to set up the host base url for your server that AMT will attempt to load content from into an iframe.
-
-NOTE: AMT loads our content as an ExternalQuestion type in an iframe. To prevent CSRF, if the iframe source is not using https Chrome will leave the iframe blank. Make sure the host base url starts with https://
-
-
+2. Install sqlite3 and ruby gem.
+    sudo apt-get install sqlite3 libsqlite3-dev
+    sudo gem install sqlite3-ruby
+3. Clone this repository and run 
 
     bundle install
-    rails g turkee --skip
-
-This last command generates a file in config/initializers, turkee.rb which contains our AWS credentials. 
-DO NOT CHECK THIS INTO SC OR SHARE YOUR KEYS WITH ANYONE.
-
-
-    AWSACCESSKEYID      = 'XXXXXXXXXXXXXXXXXX'
-    AWSSECRETACCESSKEY  = 'YYYYYYYYYYYYYYYYYYYYYYYYYYYY'
-
-    RTurk::logger.level     = Logger::DEBUG
-    RTurk.setup(AWSACCESSKEYID, AWSSECRETACCESSKEY, :sandbox => (Rails.env == 'production' ? false : true))
-
-
-Replace the Key ID and Access Key with your personal key (accessible from {here.}[https://aws-portal.amazon.com/gp/aws/developer/account/index.html?action=access-key])
-
-
-======= Database
-
-Finally, set up our database and to import the model data and category data, we need to run
-
     rake db:migrate
     rake db:seed
-
-
-==== IMPORTING IMAGES
-
-lib/tasks contains a images.yml file with some sample images; the format should be
     
-    category:
-     - file_url_or_path_1
-     - file_url_or_path_2
-     ...
+4. You can run a local server for testing w/ localhost:3000.
 
-Run
+5. Make sure the checked out repository has permissions allowing access by apache process (ensure group ownership is set to www-pub)
+6. Create symlink in active apache DocumentRoot path (usually /var/www/) pointing to the SceneStudio/public directory
+7. Install Phusion Passenger:
+    sudo gem install passenger
+    yum install curl-devel httpd-devel
+    sudo passenger-install-apache2-module
+8. Edit your your Apache conf file to load Passenger module - see output from last step. An example:
+    LoadModule passenger_module /usr/local/lib/ruby/gems/2.1.0/gems/passenger-4.0.44/buildout/apache2/mod_passenger.so
+    <IfModule mod_passenger.c>
+        PassengerRoot /usr/local/lib/ruby/gems/2.1.0/gems/passenger-4.0.44
+        PassengerDefaultRuby /usr/local/bin/ruby
+    </IfModule>
+9. Enable Apache rewrite module and ssh module
+    sudo a2enmod rewrite
+    sudo a2enmod ssl
+10. Add a VirtualHost to your Apache configuration. Make sure your VirtualHost root is to the public folder of the repo, and point the SSL configs to your .cert/.key file.
+    <VirtualHost *:80>
+        
+        RailsEnv development
+        
+        ServerName pascal3d.stanford.edu
+        RewriteEngine On
+        RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI} [L,R=permanent]
+    </VirtualHost>
+    <VirtualHost *:443>
     
-    rake import:images 
+        RailsEnv development
+        
+        ServerName pascal3d.stanford.edu
+        DocumentRoot /var/www/<base app folder>/public
+        PassengerLoadShellEnvvars off
+        PassengerLogLevel 3
+        PassengerUserSwitching off
+        <Directory "/var/www/<base app folder>/public">
+            Options -MultiViews
+            Allow from all
+        </Directory>
+    
+        SSLEngine on
+        SSLOptions +StrictRequire
+        SSLCertificateFile <.cert file>
+        SSLCertificateKeyFile <.key file>
+    </VirtualHost>
 
-to create Image objects for annotations.
+10. Enable your new site and restart Apache:
+    sudo a2ensite www.yourapp.com
+    sudo /etc/init.d/apache2 restart
+    
+=== Using with AMT
 
-=== Deployment
+1. Sign up for an account on {AWS}[http://aws.amazon.com/] and and a {Requester account for Mechanical Turk}[https://requester.mturk.com/]. You can test your MT HITS using https://requestersandbox.mturk.com/ and https://workersandbox.mturk.com/.
+2. Create a file config/config.yml to contain your AWS credentials - see example.config.yml in config/ for format. Do not check in/share this file.
+*Replace the Key ID and Access Key with your personal key (accessible from {here.}[https://aws-portal.amazon.com/gp/aws/developer/account/index.html?action=access-key]).
+*You will also be able to set up the host base url for your server that AMT will attempt to load content from into an iframe. AMT loads our content as an ExternalQuestion type in an iframe. To prevent CSRF, if the iframe source is not using https Chrome will leave the iframe blank. Make sure the host base url starts with https://
 
-TODO
-
-
+=== Worker Sandbox vs Real tests
+If the server is in production mode, your form will post to a url at Mechanical Turk - otherwise, it uses the worker sandbox. To change the mode of the server, go to your Apache Virtualhost and change the two RailsEnv declartions:
+    # Also takes test, production
+    RailsEnv development
+        
