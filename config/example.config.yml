@@ -8,8 +8,8 @@ development:
     AWS_ACCESS_KEY_ID:        'xxxxx'
     AWS_SECRET_ACCESS_KEY:    'xxxxx'
     # The base url for this deployment (needed for rake tasks)
-    HOST_BASE_URL:            'http://pascal3d.stanford.edu/'
-
+    HOST_BASE_URL:            'https://pascal3d.stanford.edu/'
+    USE_SANDBOX:              true
 test:
     # copy development verbatim
 
