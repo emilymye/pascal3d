@@ -20,7 +20,7 @@ namespace :mturk do
         hit.question(url,:frame_height => 700)
       end
       return rturk_hit
-    rescue e
+    rescue StandardError => e
       p "Unable to submit hit for #{url}: #{e.to_s}"
     end
   end
