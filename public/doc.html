@@ -7,24 +7,30 @@
 <div class="sidebar">
   <h4>Tasks</h4>
   <ul class="nav">
-    <li><a href="#mturk">mturk</a><ul>
-      <li><a href="#submit_list">submit_list</a></li>
-      <li><a href="#submit_image">submit_image</a></li>
-      <li><a href="#sync_all">sync_all</a></li>
-      <li><a href="#resubmit">resubmit</a></li>
-      <li><a href="#reset">reset</a></li>
-    </ul></li>
-    <li><a href="#mturk">annotation</a><ul>
-      <li><a href="#mturk">export_complete</a></li>
-      <li><a href="#mturk">export</a></li>
-      <li><a href="#mturk">delete_complete</a></li>
-    </ul></li>
+    <li><a href="#setupamt">Setup for AMT</a></li>
+    <li><a href="#running">Running Tasks</a></li>
+    <li><a href="#raketasks"> Possible Commands</a><ul>
+      <li><a href="#mturk">mturk</a><ul>
+        <li><a href="#submit_list">submit_list</a></li>
+        <li><a href="#submit_image">submit_image</a></li>
+        <li><a href="#sync_all">sync_all</a></li>
+        <li><a href="#resubmit">resubmit</a></li>
+        <li><a href="#reset">reset</a></li>
+      </ul></li>
+      <li><a href="#annotation">annotation</a><ul>
+        <li><a href="#exportcomplete">export_complete</a></li>
+        <li><a href="#exportbytask">export_by_task</a></li>
+        <li><a href="#deletecomplete">delete_complete</a></li>
+      </ul></li>
+    </ul>
   </ul>
 </div>
 
 <div class="container">
+
   <h1>Documentation for Pascal3D</h1>
-  <div id="raketasks">
+  <div id="setupamt">
+    
     <h2>Setup for AMT</h2>
     <ol>
       <li>Sign up for an account on {AWS}[http://aws.amazon.com/] and and a {Requester account for Mechanical Turk}[https://requester.mturk.com/]. You can test your MT HITS using https://requestersandbox.mturk.com/ and https://workersandbox.mturk.com/.
@@ -45,7 +51,43 @@
         If you already have a server running, restart it (sudo service apache2 restart).
       </li>
     </ol>
-  <h2>Commands</h2>
+  </div>
+
+  <div id="running">
+    <h2>Running Tasks for Set of Images</h2>
+    <ol>
+    <li>Create a CSV file that list images in the app/assets/images folder. Exclude the forward slash if using a subdirectory.</p>
+      For online images, you should download the images into this folder, in case the external image host fails.
+      Setting the  
+    </li>
+    <li>
+      In config/initializers/rturk.rb, change the flag in the third Rturk::setup parameter to set up tasks on either the sandbox or not (choose :sandbox => true for testing).
+    </li>
+    <li>
+      On the server, run the following command from the webapp folder (in this case, /var/www/pascal3d )
+        <pre>rake mturk:submit_list["file.csv"]</pre>
+      using the CSV you created in the first step. This should print out various messages about submitting new HITs for AMT.
+    </li>
+    <li> Either manually or periodically (cron works well), run
+        <pre>rake mturk:sync_all[ true / false ]</pre> This asks AMT to return results from completed assignments and creates new Annotation objects in the database or edits previous values. Currently it autoapproves annotations that pass validation in this task, so validation should be done manually through the AMT requester toolbox in the results. The bool parameter will run the next step automatically if true.
+    </li>
+    <li> 
+      Once you have synced the db with the results from AMT, you can submit annotations for the next task - i.e. after bounding boxes, you need to set meshes, then orientation, then keypoints. Run <pre>rake mturk:resubmit</pre> You can also export data before this step to check if it is valid. 
+    </li>
+    <li>
+      If you have annotations that have been completed (have keypoint matches) you can export them into a CSV using <pre>rake annotation:export_complete["output.csv"]</pre> To delete these from the database (so they don't show up again if you export later), run <pre>rake annotation:delete_complete</pre> Replace the output.csv parameter with whatever filename you want to export to - this file will be saved in results/. If not given, the results will be posted to results/annotation_results.csv.
+    </li>
+    <li>
+      If you want to see annotations that have a specific task completed, run <pre>rake annotation:export_by_task["bounding_box", "output.csv"]</pre>, replacing the first parameter with one of ["bounding_box", "mesh", "orientation", "keypoints"] for the task you want and the second with a results CSV. If not given, the results will be posted to results/annotation_results.csv.
+    </li>
+    <li> 
+      Dangerous but possibly necessary: If at any point you want to clear all HITs (testing and want to start clean, or having errors) run <pre>rake mturk:reset</pre>. Do not use if assignments are unapproved/not yet submitted.
+    </li>
+
+    </ol>
+  </div>
+  <div id="raketasks">
+    <h2>Commands</h2>
     <p>Generally, all interaction with AMT is done through Rake tasks. Documentation for Rake can be found <a href="http://docs.seattlerb.org/rake/">here</a>.</p></p>In general, run a rake task with command</p>
     <pre>rake &lt;namespace&gt;:&lt;cmd&gt;[ arg1, "stringarg2", ... ]</pre>
     <p> These tasks are found in lib/rake/filename.rake - if you want to add functionality for working with AMT, here is a good place.</p>
@@ -109,7 +151,7 @@
     </div>
 
     <h3 class="header" id="annotation">annotation</h3>
-      <div id="export_complete">
+      <div id="exportcomplete">
         <pre>rake annotation:export_complete[  "output.csv" ]</pre>
         <div class="desc"> 
           <p>
@@ -126,7 +168,7 @@
         </div>
 
       </div>
-      <div id="export_by_task">
+      <div id="exportbytask">
         <pre>rake annotation:export_by_task[ "type", "output.csv" ]</pre>
         <div class="desc"> 
           <p>
@@ -141,7 +183,7 @@
         </div>
 
       </div>  
-      <div id="delete_complete">
+      <div id="deletecomplete">
         <pre>rake annotation:delete_complete[]</pre>
         <div class="desc"> 
           <p>
@@ -149,8 +191,6 @@
           </p>
         </div>
       </div>
-
-
   </div>
 
 </div>

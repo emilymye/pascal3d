@@ -21,7 +21,7 @@ namespace :mturk do
       end
       p rturk_hit.url unless rturk_hit.nil?
       return rturk_hit
-    rescue e
+    rescue StandardError => e
       p "Unable to submit hit for #{url}: #{e.to_s}"
     end
   end
