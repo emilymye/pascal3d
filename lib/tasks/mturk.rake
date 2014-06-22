@@ -19,6 +19,7 @@ namespace :mturk do
         hit.auto_approval = hit_params[:auto_approval]
         hit.question(url,:frame_height => 700)
       end
+      p rturk_hit.url unless rturk_hit.nil?
       return rturk_hit
     rescue e
       p "Unable to submit hit for #{url}: #{e.to_s}"
