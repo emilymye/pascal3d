@@ -176,3 +176,14 @@ $marker-size: 10px;
   background-color:$darkblue;
   z-index:100;
 }
+
+.images{
+  position:relative;
+
+  .bounding-box{
+    position:absolute;
+    border:1px solid red;
+  }
+}
+
+

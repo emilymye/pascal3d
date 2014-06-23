@@ -96,6 +96,8 @@ namespace :mturk do
     
     next if hits.empty? 
     
+    annotations = []
+
     puts "Reviewing all assignments"
     hits.each do |hit|
       hit.assignments.each do |assignment|
@@ -104,7 +106,16 @@ namespace :mturk do
         
         case type
           when "bounding_box"
-            annotation = Annotation.new_from_hit(answers)
+            boundingboxes.each do |bb|
+              annotations << Annotation.new_from_hit({
+                "image_file"=>answers["image_file"],
+                "category_name"=> answers["category_name"],
+                "x0" => bb["x0"],
+                "y0" => bb["y0"],
+                "x1" => bb["x1"],
+                "y1" => bb["y1"]
+              })
+            end
           when "mesh", "orientation", "keypoints"
             aid = answers["annotation_id"].to_i
             annotation = Annotation.find(aid)
@@ -114,6 +125,7 @@ namespace :mturk do
               next
             end
             annotation.update_from_hit(type, answers)
+            annotations << annotation
           else 
             p 'error: HIT #{hit.id}, assignment #{assignment.id} has no task type'
             assignment.reject!
@@ -121,16 +133,18 @@ namespace :mturk do
         end
 
         p "Processing HIT, type #{type}"
-        if annotation.save
-          assignment.approve! if assignment.status == 'Submitted'
-          p "Annotation was successfully updated"
-          if (autosubmit and annotation.stage != Annotation::STAGES[:complete])
-            annotation.submit_hit(hit_param_types) 
+        annotations.each do |a| 
+          if a.save
+            assignment.approve! if assignment.status == 'Submitted'
+            p "Annotation was successfully updated"
+            if (autosubmit and a.stage != Annotation::STAGES[:complete])
+              a.submit_hit(hit_param_types) 
+            end
+          else 
+            p a.errors
+            p "Annotation rejected, rejecting assignment"
+            assignment.reject! if assignment.status == 'Submitted'
           end
-        else 
-          p annotation.errors
-          p "Annotation rejected, rejecting assignment"
-          assignment.reject! if assignment.status == 'Submitted'
         end
       end
       hit.expire!

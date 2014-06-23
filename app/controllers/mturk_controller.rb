@@ -32,13 +32,27 @@ class MturkController < ApplicationController
 
     type = params[:task]
     if type == "bounding_box"
-      @annotation = Annotation.new_from_hit(params)
-      if @annotation.save
-        render :text => "Annotation was successfully created" and return
-      else 
-        p @annotation.errors
-        render :text => "Error, no annotation created" and return
+      render :text => "Error, no bounding boxes to process" and return if params["bounding_boxes"].nil? 
+      text = ""
+      boundingboxes = JSON.parse(params["bounding_boxes"])
+      boundingboxes.each do |bb|
+
+        @annotation = Annotation.new_from_hit({
+          "image_file"=>params["image_file"],
+          "category_name"=> params["category_name"],
+          "x0" => bb["x0"],
+          "y0" => bb["y0"],
+          "x1" => bb["x1"],
+          "y1" => bb["y1"]
+        })
+        if @annotation.save
+          text = text + "Annotation #{@annotation.id} created\n"
+        else 
+          text = text + "Error, no annotation created with bounding box #{bb.to_s}]"
+        end
+        
       end
+      render :text => text and return
     else
       @annotation = Annotation.find_by_id(params[:annotation_id])
       render :text => "Error, no such annotation" and return unless !@annotation.nil?
@@ -60,7 +74,6 @@ class MturkController < ApplicationController
       if !@annotation.nil?
         @annotation.stage = @annotation.stage + 1;
         if @annotation.save
-
           render :text => "Annotation was successfully updated" and return
         else 
           p @annotation.errors

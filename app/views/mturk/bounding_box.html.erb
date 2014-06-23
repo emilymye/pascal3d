@@ -1,31 +1,29 @@
 <div class = "container">
 <% cat_pretty = @category.name.humanize.downcase %>
 <div class = "instructions">
-  <h1>Annotate the <%= cat_pretty %> in the image.</h1>
-  <p>Resize the rectangle so it tightly bounds the <em><%=cat_pretty %></em> in the picture. If there is more than one <%=cat_pretty %> in the image, choose one. If the object is not fully in the image, bound as much of the object as you can.</p> 
+  <h1>Annotate <%= cat_pretty %> objects in the image.</h1>
+  <p>Click and drag to draw rectangles around each <%=cat_pretty %> in the picture. If the object is not fully in the image, bound as much of the object as you can. Click the "Undo One" button to undo the last box you made, and "Submit" when you are finished.</p> 
+  <a id="deleteBtn" class="btn btn-blue" style="width:80px!important;margin-bottom:20px;">Undo One</a>
   <% if @preview %>
     <p>
       <strong>This is a preview.</strong> Once you begin this task, you will see a button to submit your annotation here.
     </p>
   <% else %>
-    <form id="bounding_box_form" action="<%= @formurl %>"  method="POST">
+    <form id="bounding_box_form" action="<%= @formurl %>"  method="POST" onsubmit = >
       <%= hidden_field_tag 'assignmentId', @assignmentId%>
       <%= hidden_field_tag 'task', "bounding_box"%>
       <%= hidden_field_tag 'image_file', @img%>
       <%= hidden_field_tag 'category_name', @category.name%>
 
       <!-- bounding box -->
-      <%= hidden_field_tag 'x0', 0 %>
-      <%= hidden_field_tag 'x1', 0 %>
-      <%= hidden_field_tag 'y0', 0 %>
-      <%= hidden_field_tag 'y1', 0 %>
+      <%= hidden_field_tag 'bounding_boxes', 0 %>
 
       <%= submit_tag 'Submit', :class => "btn btn-green" %>
     </form>
   <%end%>
   </div>
   
-  <div class = "images">
+  <div id = "image-container" class = "images">
     <%= image_tag @img, :id=>"task-image", :class => "viewport" %>
   </div>
 </div>
@@ -33,38 +31,90 @@
 
 <script>
   $(function(){
-    var width = $('#task-image').width();
-    var height = $('#task-image').height();
+    var boundingBoxes = [ ];
+    var currBoxStart = {};
+    var currBox;
 
-    $('#task-image').imgAreaSelect({
-        x1: 10,
-        y1: 10,
-        x2: width-10,
-        y2: height-10,
-        persistent:true,
-        minHeight: 1,
-        minWidth: 1,
-        handles: true,
-        onInit: updateBoundingBox,
-        onSelectEnd: updateBoundingBox
+    var bounding = false;
+
+    $("img").attr('draggable','false');
+    
+    $("#deleteBtn").click(function(){
+      console.log("delete last")
+      $("#boundingbox" + (boundingBoxes.length-1)).remove();
+      boundingBoxes.pop();
     });
 
-    function updateBoundingBox(img, selection){
-      $("input#x0").val(selection.x1);
-      $("input#x1").val(selection.x2);
-      $("input#y0").val(selection.y1);
-      $("input#y1").val(selection.y2);
-    }
+    $(".bounding-box").mousemove(function(e){
+      $(this).parent.mousemove(e);
+    });
+
+    $(document).mousemove(function(e){
+      if (!bounding) return true;;
+      dx = e.clientX - $("img").offset().left;
+      dy = e.clientY - $("img").offset().top;
+
+      if (dx < 0 || dx > $("img").width() ||
+          dy < 0 || dy > $("img").height())
+          return true;
+
+      currBox.width(Math.abs(currBoxStart.x - dx));
+      currBox.height(Math.abs(currBoxStart.y - dy));
+
+      currBox.css({ left: Math.min(dx,currBoxStart.x), top: Math.min(dy,currBoxStart.y) });
+      return true;
+    });
+
+
+     $(document).mousedown(function(e){
+      if (bounding) return;
+      var dx, dy;
+      dx = e.clientX - $("img").offset().left;
+      dy = e.clientY - $("img").offset().top;
+      if (dx < 0 || dx > $("img").width() ||
+          dy < 0 || dy > $("img").height())
+          return true;
+      bounding = true;
+      currBoxStart = {x: dx, y: dy};
+      currBox = $("<div class='bounding-box'></div>")
+        .appendTo("#image-container");
+      currBox.css({ top: dx, left: dy });
+      currBox.attr("id","boundingbox" + boundingBoxes.length)
+    });
+
+    $(document).mouseup(function(e){
+      if (!bounding) return;
+      
+      boundingBoxes.push({
+        x0: currBox.position().left, 
+        y0: currBox.position().top,
+        x1: currBox.position().left + currBox.width(),
+        y1: currBox.position().top + currBox.height()
+      });
+      currBoxStart = {};
+      bounding = false;
+    });
   
-    $("form").submit(function(event){
-      var x0 = parseInt($("input#x0").val());
-      var x1 = parseInt($("input#x1").val());
-      var y0 = parseInt($("input#y0").val());
-      var y1 = parseInt($("input#y1").val());
-      if (!isNaN(x0) && !isNaN(x1) && !isNaN(y0) && !isNaN(y1) ){
-        return true;
+    function validateBoundingBox(){
+      if (boundingBoxes.length == 0){
+        alert("No objects annotated!");
+        return false;
       }
-      return false;
-    });
+      
+      console.log("HERE");
+      for (var i in boundingBoxes){
+        var bb = boundingBoxes[i]
+        if (isNaN(bb.x0) || isNaN(bb.x1) || isNaN(bb.y0) || isNaN(bb.y1)){
+          alert("Error: input data is incorrect");
+          return false;
+        }
+      }
+
+      $("input#bounding_boxes").val(JSON.stringify(boundingBoxes));
+      console.log($("input#bounding_boxes").val());
+      return true;
+    }
+
+    $("form").submit(validateBoundingBox);
   });
 </script>
