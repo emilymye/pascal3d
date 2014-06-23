@@ -25,3 +25,6 @@
 
 #Ignore anything in results
 /results/*
+
+#Swap files
+public/*.swp
