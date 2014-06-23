@@ -1,8 +1,18 @@
 namespace :annotation do
 
+  desc 'delete annotations with specific id'
+  task :delete, [:id] => :environment do |t, args|
+
+    id = args[:id]
+    p "No annotation with #{id}, returning" and next if Annotation.find_by_id(id).nil?
+    Annotation.destroy(id)
+    p "Annotation with id #{id} deleted"
+  end
+
+
   desc 'delete complete annotations'
   task :delete_complete => :environment do
-    count = Annotation.delete_all(stage: Annotation::STAGES[:complete])
+    count = Annotation.destroy_all(stage: Annotation::STAGES[:complete])
     p "#{count} annotations deleted"
   end
 
