@@ -140,9 +140,10 @@ class Annotation < ActiveRecord::Base
 
 
   def export
-    # image_file, category_name, x0, x1, y0, y1, mesh, elevation, azimuth, keypoint_matches, created_at, updated_at
+    # id, image_file, category_name, x0, x1, y0, y1, mesh, elevation, azimuth, keypoint_matches, created_at, updated_at
     
     arr = [ 
+      id,
       image_file,
       category_name,
       x0, x1, y0, y1,
