@@ -108,6 +108,7 @@ namespace :mturk do
         
         case type
           when "bounding_box"
+            boundingboxes = JSON.parse(answers["bounding_boxes"])
             boundingboxes.each do |bb|
               annotations << Annotation.new_from_hit({
                 "image_file"=>answers["image_file"],
