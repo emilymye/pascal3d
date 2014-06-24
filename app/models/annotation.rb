@@ -127,7 +127,9 @@ class Annotation < ActiveRecord::Base
     url = INIT_CONFIG["HOST_BASE_URL"] + "mturk/edit_annotation/#{id}"
 
     begin
-      rturk_hit = create_hit(hit_params, url)
+      RTurk::Utilities.retry_on_unavailable(1) do
+        rturk_hit = create_hit(hit_params, url)
+      end
       self.submitted = true
       self.save!
       p "Submitted #{type} HIT for annotation #{id} with id #{rturk_hit.id} "

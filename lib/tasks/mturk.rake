@@ -6,21 +6,23 @@ namespace :mturk do
       p "running on localhost...not submitting to MTurk" and return
     end
     begin
-      rturk_hit = RTurk::Hit.create(:title => hit_params[:title] ) do |hit|
-        hit.description = hit_params[:description]
-        hit.reward = hit_params[:reward]
-        hit.max_assignments = hit_params[:num_assignments]
+      RTurk::Utilities.retry_on_unavailable(1) do 
+        rturk_hit = RTurk::Hit.create(:title => hit_params[:title] ) do |hit|
+          hit.description = hit_params[:description]
+          hit.reward = hit_params[:reward]
+          hit.max_assignments = hit_params[:num_assignments]
 
-        hit.duration = hit_params[:duration]
-        hit.lifetime = hit_params[:lifetime]
+          hit.duration = hit_params[:duration]
+          hit.lifetime = hit_params[:lifetime]
 
-        hit.keywords = hit_params[:keywords]
-        hit_params[:qualifications].each{ |k, v| hit.qualifications.add(k,v) }
-        hit.auto_approval = hit_params[:auto_approval]
-        hit.question(url,:frame_height => 700)
+          hit.keywords = hit_params[:keywords]
+          hit_params[:qualifications].each{ |k, v| hit.qualifications.add(k,v) }
+          hit.auto_approval = hit_params[:auto_approval]
+          hit.question(url,:frame_height => 700)
+        end
+        p rturk_hit.url unless rturk_hit.nil?
+        return rturk_hit
       end
-      p rturk_hit.url unless rturk_hit.nil?
-      return rturk_hit
     rescue StandardError => e
       p "Unable to submit hit for #{url}: #{e.to_s}"
     end
@@ -121,34 +123,44 @@ namespace :mturk do
             annotation = Annotation.find(aid)
             if annotation.nil?
               p "Error, no annotation with id #{aid}"
-              assignment.reject!
+              RTurk::Utilities.retry_on_unavailable(1) do
+                assignment.reject!
+              end
               next
             end
             annotation.update_from_hit(type, answers)
             annotations << annotation
           else 
             p 'error: HIT #{hit.id}, assignment #{assignment.id} has no task type'
-            assignment.reject!
+            RTurk::Utilities.retry_on_unavailable(1) do
+              assignment.reject!
+            end
             next
         end
 
         p "Processing HIT, type #{type}"
         annotations.each do |a| 
           if a.save
-            assignment.approve! if assignment.status == 'Submitted'
-            p "Annotation was successfully updated"
+            RTurk::Utilities.retry_on_unavailable(1) do
+              assignment.approve! if assignment.status == 'Submitted'
+              p "Annotation was successfully updated"
+            end
             if (autosubmit and a.stage != Annotation::STAGES[:complete])
               a.submit_hit(hit_param_types) 
             end
           else 
             p a.errors
             p "Annotation rejected, rejecting assignment"
-            assignment.reject! if assignment.status == 'Submitted'
+            RTurk::Utilities.retry_on_unavailable(1) do
+              assignment.reject! if assignment.status == 'Submitted'
+            end
           end
         end
       end
-      hit.expire!
-      hit.dispose!
+      RTurk::Utilities.retry_on_unavailable(1) do
+        hit.expire!
+        hit.dispose!
+      end
     end
   end
 
