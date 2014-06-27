@@ -139,22 +139,28 @@ namespace :mturk do
             next
         end
 
-        p "Processing HIT, type #{type}"
+        p "Processing HIT, type #{type} - #{annotations.count} annotations"
+        incorrectcnt = 0
         annotations.each do |a| 
           if a.save
-            RTurk::Utilities.retry_on_unavailable(1) do
-              assignment.approve! if assignment.status == 'Submitted'
-              p "Annotation was successfully updated"
-            end
+            p "Annotation was successfully saved"
             if (autosubmit and a.stage != Annotation::STAGES[:complete])
               a.submit_hit(hit_param_types) 
             end
-          else 
+          else
+            incorrectcnt += 1
             p a.errors
+            p "Annotation was not saved, skipping"
+          end
+        end
+        
+        RTurk::Utilities.retry_on_unavailable(1) do
+          if (incorrectcnt < 0.4 * annotations.count) 
+            p "Annotation accuracy acceptable, approving assignment"
+            assignment.approve! if assignment.status == 'Submitted'
+          else
             p "Annotation rejected, rejecting assignment"
-            RTurk::Utilities.retry_on_unavailable(1) do
-              assignment.reject! if assignment.status == 'Submitted'
-            end
+            assignment.reject! if assignment.status == 'Submitted'
           end
         end
       end
