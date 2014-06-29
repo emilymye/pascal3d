@@ -45,9 +45,11 @@ namespace :annotation do
     p "Incorrect task type given: #{task}" and next if idx.nil? 
 
     annotations = Annotation.where(stage: Annotation::STAGES[idx + 1])
-    CSV.open("results/" + file, "wb") do |csv|
+    p "No annotations of type #{task}" and next if annotations.empty? 
+    CSV.open("results/" + file, "w") do |csv|
       annotations.each do |annotation|
-        csv << annotation.export
+        p annotation
+        csv << annotation.export.to_s
       end
     end
     p "Written to results/#{file}"

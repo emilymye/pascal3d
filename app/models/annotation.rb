@@ -129,11 +129,11 @@ class Annotation < ActiveRecord::Base
     begin
       RTurk::Utilities.retry_on_unavailable(1) do
         rturk_hit = create_hit(hit_params, url)
+        self.submitted = true
+        self.save!
+        p "Submitted #{type} HIT for annotation #{id} with id #{rturk_hit.id} "
+        return rturk_hit
       end
-      self.submitted = true
-      self.save!
-      p "Submitted #{type} HIT for annotation #{id} with id #{rturk_hit.id} "
-      return rturk_hit
     rescue RTurk::RTurkError => e
       p e
       p "Error submitting annotation #{id} - rerun to try again" and return
