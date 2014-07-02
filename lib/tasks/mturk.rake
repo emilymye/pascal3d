@@ -166,7 +166,7 @@ namespace :mturk do
       end
       RTurk::Utilities.retry_on_unavailable(1) do
         hit.expire!
-        hit.dispose!
+        #hit.dispose!
       end
     end
   end
