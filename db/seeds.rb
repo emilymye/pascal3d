@@ -96,6 +96,12 @@ meshes: [ "bicycle01.json","bicycle02.json","bicycle03.json","bicycle04.json",
   keypoints: ["front_bottom_left", "front_bottom_right", "front_top_left", "front_top_right",
               "back_bottom_left", "back_bottom_right", "back_top_left", "back_top_right"],
   meshes: [ "tvmonitor01.json","tvmonitor02.json","tvmonitor03.json","tvmonitor04.json" ]
+},
+{
+  name: 'bed',
+  keypoints: ["back_left", "back_right", "frame_upper_left", "frame_upper_right", "frame_lower_left", "frame_lower_right",
+              "mattress_upper_left", "mattress_upper_right", "mattress_lower_left", "mattress_lower_right"],
+  meshes: [ "bed01.json" ]
 }
 ])
 

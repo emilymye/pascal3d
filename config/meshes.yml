@@ -1,6 +1,8 @@
 # meshes.yml
 # List of meshes for each category
 
+bed:
+  - "bed01.json"
 aeroplane:
   - "aeroplane01.json"
   - "aeroplane02.json"
