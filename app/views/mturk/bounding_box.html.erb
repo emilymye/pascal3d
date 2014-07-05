@@ -1,8 +1,13 @@
 <div class = "container">
 <% cat_pretty = @category.name.humanize.downcase %>
 <div class = "instructions">
-  <h1>Annotate <%= cat_pretty %> objects in the image.</h1>
-  <p>Click and drag to draw rectangles around each <%=cat_pretty %> in the picture. If the object is not fully in the image, bound as much of the object as you can. Click the "Undo One" button to undo the last box you made, and "Submit" when you are finished.</p> 
+  <h1>Annotate <%= cat_pretty %>(s) in the image.</h1>
+  <p>The goal is to find the tightest bounding box around each <%=cat_pretty %> in the picture. Click and drag the lines so you find the best bounding box around each <%=cat_pretty %>. If you see multiple <%=cat_pretty %> in one image, the procedure should be repeated for all of the <%=cat_pretty %> in the image. Click the "Undo One" button to undo the last box you made, and "Submit" when you are finished. <br />Below, we show three examples.<br /></p>
+  <p>
+    <img src="http://cvgl.stanford.edu/projects/PASCAL3D_AMT/instructions/bed/bed01.png" height="120">
+    <img src="http://cvgl.stanford.edu/projects/PASCAL3D_AMT/instructions/bed/bed02.png" height="120">
+    <img src="http://cvgl.stanford.edu/projects/PASCAL3D_AMT/instructions/bed/bed03.png" height="120">
+  </p>
   <a id="deleteBtn" class="btn btn-blue" style="width:80px!important;margin-bottom:20px;">Undo One</a>
   <% if @preview %>
     <p>
@@ -51,11 +56,11 @@
 
     $(document).mousemove(function(e){
       if (!bounding) return true;;
-      dx = e.clientX - $("img").offset().left;
-      dy = e.clientY - $("img").offset().top;
+      dx = e.clientX - $("#image-container > img").offset().left;
+      dy = e.clientY - $("#image-container > img").offset().top;
 
-      if (dx < 0 || dx > $("img").width() ||
-          dy < 0 || dy > $("img").height())
+      if (dx < 0 || dx > $("#image-container > img").width() ||
+          dy < 0 || dy > $("#image-container > img").height())
           return true;
 
       currBox.width(Math.abs(currBoxStart.x - dx));
@@ -69,10 +74,10 @@
      $(document).mousedown(function(e){
       if (bounding) return;
       var dx, dy;
-      dx = e.clientX - $("img").offset().left;
-      dy = e.clientY - $("img").offset().top;
-      if (dx < 0 || dx > $("img").width() ||
-          dy < 0 || dy > $("img").height())
+      dx = e.clientX - $("#image-container > img").offset().left;
+      dy = e.clientY - $("#image-container > img").offset().top;
+      if (dx < 0 || dx > $("#image-container > img").width() ||
+          dy < 0 || dy > $("#image-container > img").height())
           return true;
       bounding = true;
       currBoxStart = {x: dx, y: dy};

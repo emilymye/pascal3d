@@ -101,7 +101,7 @@ meshes: [ "bicycle01.json","bicycle02.json","bicycle03.json","bicycle04.json",
   name: 'bed',
   keypoints: ["back_left", "back_right", "frame_upper_left", "frame_upper_right", "frame_lower_left", "frame_lower_right",
               "mattress_upper_left", "mattress_upper_right", "mattress_lower_left", "mattress_lower_right"],
-  meshes: [ "bed01.json" ]
+  meshes: [ "bed01.json","bed02.json","bed03.json","bed04.json","bed05.json","bed06.json" ]
 }
 ])
 
