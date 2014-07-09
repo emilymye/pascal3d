@@ -9,6 +9,6 @@
 :keywords:  ["image","photo","annotation"]
 :qualifications:
   :approval_rate:
-    :gt: 95
+    :gt: 96
   :hits_approved:
     :gt: 1000
