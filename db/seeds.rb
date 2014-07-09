@@ -98,10 +98,43 @@ meshes: [ "bicycle01.json","bicycle02.json","bicycle03.json","bicycle04.json",
   meshes: [ "tvmonitor01.json","tvmonitor02.json","tvmonitor03.json","tvmonitor04.json" ]
 },
 {
+  name: 'ashtray',
+  keypoints: ["top_outer_left","top_outer_right","top_outer_back","top_outer_front",
+              "bottom_left","bottom_right","bottom"],
+  meshes: [ "ashtray01.json","ashtray02.json","ashtray03.json","ashtray04.json","ashtray05.json","ashtray06.json"]
+},
+{
   name: 'bed',
   keypoints: ["back_left", "back_right", "frame_upper_left", "frame_upper_right", "frame_lower_left", "frame_lower_right",
               "mattress_upper_left", "mattress_upper_right", "mattress_lower_left", "mattress_lower_right"],
   meshes: [ "bed01.json","bed02.json","bed03.json","bed04.json","bed05.json","bed06.json" ]
+},
+{
+  name: 'bench',
+  keypoints: ["seat_front_left","seat_front_right","seat_back_left","seat_back_right",
+              "leg_front_left","leg_front_right","leg_back_left","leg_back_right",
+              "back_upper_left","back_upper_right","left_handle","right_handle"],
+  meshes: [ "bench01.json","bench02.json","bench03.json","bench04.json","bench05.json"]
+},
+{
+  name: 'calculator',
+  keypoints: ["display_upper_left","display_upper_right","display_lower_left","display_lower_right",
+              "body_upper_left","body_upper_right","body_lower_left","body_lower_right",
+              "key_upper_left","key_upper_right","key_lower_left","key_lower_right"],
+  meshes: ["calculator01.json","calculator02.json","calculator03.json","calculator04.json","calculator05.json"]
+},
+{
+  name: 'cellphone',
+  keypoints: ["inscreen_upper_left","inscreen_upper_right","inscreen_lower_left","inscreen_lower_right",
+              "outscreen_upper_left","outscreen_upper_right","outscreen_lower_left","outscreen_lower_right",
+              "key_upper_left","key_upper_right","key_lower_left","key_lower_right",
+              "back_upper_left","back_upper_right","back_lower_left","back_lower_right"],
+  meshes: ["cellphone01.json","cellphone02.json","cellphone03.json","cellphone04.json"]
+},
+{
+  name: 'cup',
+  keypoints: ["upper_left","upper_right","upper_center","lower_left","lower_right","lower_center","handle_top","handle_bottom","handle_center"],
+  meshes: [ "cup01.json","cup02.json","cup03.json","cup04.json","cup05.json","cup06.json" ]
 }
 ])
 
