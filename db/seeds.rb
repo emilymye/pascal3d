@@ -117,6 +117,23 @@ meshes: [ "bicycle01.json","bicycle02.json","bicycle03.json","bicycle04.json",
   meshes: [ "bench01.json","bench02.json","bench03.json","bench04.json","bench05.json"]
 },
 {
+  name: 'blackboard',
+  keypoints: ["upper_left","upper_right","lower_left","lower_right"],
+  meshes: ["blackboard01.json","blackboard02.json","blackboard03.json","blackboard04.json"]
+},
+{
+  name: 'bookshelf',
+  keypoints: ["front_top_left","front_top_right","front_bottom_left","front_bottom_right",
+              "back_top_left","back_top_right","back_bottom_left","back_bottom_right"],
+  meshes: ["bookshelf01.json","bookshelf02.json","bookshelf03.json","bookshelf04.json"]
+},
+{
+  name: 'bucket',
+  keypoints: ["handle_center","handle_left","handle_right","bottom","bottom_left","bottom_right",
+              "top","top_left","top_right"],
+  meshes: ["bucket01.json","bucket02.json","bucket03.json","bucket04.json","bucket05.json"]
+},
+{
   name: 'calculator',
   keypoints: ["display_upper_left","display_upper_right","display_lower_left","display_lower_right",
               "body_upper_left","body_upper_right","body_lower_left","body_lower_right",
@@ -130,6 +147,11 @@ meshes: [ "bicycle01.json","bicycle02.json","bicycle03.json","bicycle04.json",
               "key_upper_left","key_upper_right","key_lower_left","key_lower_right",
               "back_upper_left","back_upper_right","back_lower_left","back_lower_right"],
   meshes: ["cellphone01.json","cellphone02.json","cellphone03.json","cellphone04.json"]
+},
+{
+  name: 'coffee_maker',
+  keypoints: ["left","right","top","bottom"],
+  meshes: ["coffee_maker01.json","coffee_maker02.json","coffee_maker03.json","coffee_maker04.json"]
 },
 {
   name: 'cup',
