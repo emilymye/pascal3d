@@ -157,6 +157,186 @@ meshes: [ "bicycle01.json","bicycle02.json","bicycle03.json","bicycle04.json",
   name: 'cup',
   keypoints: ["upper_left","upper_right","upper_center","lower_left","lower_right","lower_center","handle_top","handle_bottom","handle_center"],
   meshes: [ "cup01.json","cup02.json","cup03.json","cup04.json","cup05.json","cup06.json" ]
+},
+{
+  name: 'pen',
+  keypoints: ["tmp"],
+  meshes: ["pen01.json"]
+},
+{
+  name: 'pencil',
+  keypoints: ["tmp"],
+  meshes: ["pencil01.json"]
+},
+{
+  name: 'piano',
+  keypoints: ["tmp"],
+  meshes: ["piano01.json"]
+},
+{
+  name: 'pillow',
+  keypoints: ["tmp"],
+  meshes: ["pillow01.json"]
+},
+{
+  name: 'plate',
+  keypoints: ["tmp"],
+  meshes: ["plate01.json"]
+},
+{
+  name: 'pot',
+  keypoints: ["tmp"],
+  meshes: ["pot01.json"]
+},
+{
+  name: 'printer',
+  keypoints: ["tmp"],
+  meshes: ["printer01.json"]
+},
+{
+  name: 'racket',
+  keypoints: ["tmp"],
+  meshes: ["racket01.json"]
+},
+{
+  name: 'refrigerator',
+  keypoints: ["tmp"],
+  meshes: ["refrigerator01.json"]
+},
+{
+  name: 'remote_control',
+  keypoints: ["tmp"],
+  meshes: ["remote_control01.json"]
+},
+{
+  name: 'rifle',
+  keypoints: ["tmp"],
+  meshes: ["rifle01.json"]
+},
+{
+  name: 'road_pole',
+  keypoints: ["tmp"],
+  meshes: ["road_pole01.json"]
+},
+{
+  name: 'satellite_dish',
+  keypoints: ["tmp"],
+  meshes: ["satellite_dish01.json"]
+},
+{
+  name: 'scissors',
+  keypoints: ["tmp"],
+  meshes: ["scissors01.json"]
+},
+{
+  name: 'screwdriver',
+  keypoints: ["tmp"],
+  meshes: ["screwdriver01.json"]
+},
+{
+  name: 'shoe',
+  keypoints: ["tmp"],
+  meshes: ["shoe01.json"]
+},
+{
+  name: 'shovel',
+  keypoints: ["tmp"],
+  meshes: ["shovel01.json"]
+},
+{
+  name: 'sign',
+  keypoints: ["tmp"],
+  meshes: ["sign01.json"]
+},
+{
+  name: 'skate',
+  keypoints: ["tmp"],
+  meshes: ["skate01.json"]
+},
+{
+  name: 'slipper',
+  keypoints: ["tmp"],
+  meshes: ["slipper01.json"]
+},
+{
+  name: 'speaker',
+  keypoints: ["tmp"],
+  meshes: ["speaker01.json"]
+},
+{
+  name: 'spoon',
+  keypoints: ["tmp"],
+  meshes: ["spoon01.json"]
+},
+{
+  name: 'stapler',
+  keypoints: ["tmp"],
+  meshes: ["stapler01.json"]
+},
+{
+  name: 'stove',
+  keypoints: ["tmp"],
+  meshes: ["stove01.json"]
+},
+{
+  name: 'suitcase',
+  keypoints: ["tmp"],
+  meshes: ["suitcase01.json"]
+},
+{
+  name: 'teapot',
+  keypoints: ["tmp"],
+  meshes: ["teapot01.json"]
+},
+{
+  name: 'telephone',
+  keypoints: ["tmp"],
+  meshes: ["telephone01.json"]
+},
+{
+  name: 'toilet',
+  keypoints: ["tmp"],
+  meshes: ["toilet01.json"]
+},
+{
+  name: 'toothbrush',
+  keypoints: ["tmp"],
+  meshes: ["toothbrush01.json"]
+},
+{
+  name: 'trash_bin',
+  keypoints: ["tmp"],
+  meshes: ["trash_bin01.json"]
+},
+{
+  name: 'trophy',
+  keypoints: ["tmp"],
+  meshes: ["trophy01.json"]
+},
+{
+  name: 'tub',
+  keypoints: ["tmp"],
+  meshes: ["tub01.json"]		  
+},
+{
+  name: 'vending_machine',
+  keypoints: ["tmp"],
+  meshes: ["vending_machine01.json"]
+},
+{
+  name: 'washing_machine',
+  keypoints: ["tmp"],
+  meshes: ["washing_machine01.json"]
+},
+{
+  name: 'watch',
+  keypoints: ["tmp"],
+  meshes: [ "watch01.json"]
+},
+{
+  name: 'wheelchair',
+  keypoints: ["tmp"],
+  meshes: [ "wheelchair01.json" ]
 }
 ])
 
