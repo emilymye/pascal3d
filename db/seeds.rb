@@ -104,9 +104,9 @@ meshes: [ "bicycle01.json","bicycle02.json","bicycle03.json","bicycle04.json",
   meshes: [ "ashtray01.json","ashtray02.json","ashtray03.json","ashtray04.json","ashtray05.json","ashtray06.json"]
 },
 {
-  name: 'barrel',
+  name: 'backpack',
   keypoints: ["tmp"],
-  meshes: ["barrel01.json"]
+  meshes: ["backpack01.json"]
 },
 {
   name: 'basket',
@@ -132,20 +132,10 @@ meshes: [ "bicycle01.json","bicycle02.json","bicycle03.json","bicycle04.json",
   meshes: ["blackboard01.json","blackboard02.json","blackboard03.json","blackboard04.json"]
 },
 {
-  name: 'book',
-  keypoints: ["tmp"],
-  meshes: ["book01.json"]
-},
-{
   name: 'bookshelf',
   keypoints: ["front_top_left","front_top_right","front_bottom_left","front_bottom_right",
               "back_top_left","back_top_right","back_bottom_left","back_bottom_right"],
   meshes: ["bookshelf01.json","bookshelf02.json","bookshelf03.json","bookshelf04.json"]
-},
-{
-  name: 'box',
-  keypoints: ["tmp"],
-  meshes: ["box01.json"]
 },
 {
   name: 'bucket',
@@ -277,6 +267,11 @@ meshes: [ "bicycle01.json","bicycle02.json","bicycle03.json","bicycle04.json",
   name: 'guitar',
   keypoints: ["tmp"],
   meshes: ["guitar01.json"]
+},
+{
+  name: 'hammer',
+  keypoints: ["tmp"],
+  meshes: ["hammer01.json"]
 },
 {
   name: 'hair_dryer',
@@ -464,6 +459,11 @@ meshes: [ "bicycle01.json","bicycle02.json","bicycle03.json","bicycle04.json",
   meshes: ["skate01.json"]
 },
 {
+  name: 'skateboard',
+  keypoints: ["tmp"],
+  meshes: ["skateboard01.json"]
+},
+{
   name: 'slipper',
   keypoints: ["tmp"],
   meshes: ["slipper01.json"]
@@ -502,6 +502,11 @@ meshes: [ "bicycle01.json","bicycle02.json","bicycle03.json","bicycle04.json",
   name: 'telephone',
   keypoints: ["tmp"],
   meshes: ["telephone01.json"]
+},
+{
+  name: 'toaster',
+  keypoints: ["tmp"],
+  meshes: ["toaster01.json"]
 },
 {
   name: 'toilet',
