@@ -242,7 +242,7 @@ namespace :mturk do
 	abort("invalid category") if Category.find_by_name(category).nil?
 	abort("config/hits/mesh.yml not found") if hit_params.nil?	
 
-	url = INIT_CONFIG["HOST_BASE_URL"] + "mturk/mesh" #"mturk/edit_annotation"
+	url = INIT_CONFIG["HOST_BASE_URL"] + "mturk/mesh_annotation" #"mturk/edit_annotation"
 	p url
 
 	hit = create_hit(hit_params, url)
