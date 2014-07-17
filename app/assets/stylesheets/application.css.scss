@@ -97,6 +97,13 @@ body{
   }
 }
 
+.viewport-wrap2{
+  width:500px;
+  height:400px;
+  display:inline-block;
+  position:relative;
+}
+
 .loading{
   position:absolute;
   top:50%;
@@ -109,7 +116,7 @@ body{
 
 .bounding_box {
   display:inline-block;
-  border:1px solid $red;
+  border:2px solid $darkred;
   position:absolute;
 }
 
