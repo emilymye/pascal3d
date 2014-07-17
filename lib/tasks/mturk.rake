@@ -207,4 +207,53 @@ namespace :mturk do
       h.dispose!
     end
   end
+
+  desc 'Read csv file of images and their bounding box annotations, and creates new mesh HITs'
+  task :upload_mesh_hits, [:bbox_list] => :environment do |t, args|
+
+    # read mesh HIT configuration
+    hit_params = YAML::load_file('config/hits/mesh.yml')
+    abort("config/hits/mesh.yml not found") if hit_params.nil?
+
+    # fetch csv file path from the input argument
+    csv_path = args[:bbox_list]
+    abort("1 argument expected: path to csv file listing bounding box annotations") if csv_path.nil? # (filename, category, x0,y0,x1,y1)
+
+    # read :bbox_list
+    p "Reading CSV file #{csv_path}"
+    count = 0
+    CSV.foreach(csv_path) do |row| # read a line at a time
+      count += 1
+      begin
+	image_path = row[0]
+	category = row[1]
+	x0 = row[2]
+	x1 = row[3]
+	y0 = row[4]
+	y1 = row[5]
+
+	p image_path
+	p category
+	p x0+" "+x1+" "+y0+" "+y1
+	
+	# check existence of image path, category and bbox annotation
+	abort("six arguments expected: image path, category, x0, x1, y0, y1") if image_path.nil? or category.nil? or x0.nil? or x1.nil? or y0.nil? or y1.nil?
+	#abort("image file not found in app/assets/images") if Rails.application.assets.find_Asset(image_path).nil?
+	abort("invalid category") if Category.find_by_name(category).nil?
+	abort("config/hits/mesh.yml not found") if hit_params.nil?	
+
+	url = INIT_CONFIG["HOST_BASE_URL"] + "mturk/mesh" #"mturk/edit_annotation"
+	p url
+
+	hit = create_hit(hit_params, url)
+	p "Successfully submitted hit #{hit.id}"
+
+      rescue StandardError => e
+	p "Unable to submit HIT for row #{count}:#{row.to_s}"
+	p e
+	next
+      end
+    end # end CSV.foreach
+  end # end task
+
 end
