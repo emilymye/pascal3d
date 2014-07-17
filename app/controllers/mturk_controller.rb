@@ -12,6 +12,9 @@ class MturkController < ApplicationController
     @category = Category.find_by_name(params[:category]) || render_401
   end
 
+  def mesh_annotation
+    render "mesh"
+  end
   def edit_annotation
     if @annotation.stage == Annotation::STAGES[:mesh]
       @meshes = @annotation.category.meshes
