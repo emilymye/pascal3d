@@ -209,44 +209,62 @@ namespace :mturk do
   end
 
   desc 'Read csv file of images and their bounding box annotations, and creates new mesh HITs'
-  task :upload_mesh_hits, [:bbox_list] => :environment do |t, args|
+  task :submit_bbox_list, [:bbox_list] => :environment do |t, args|
 
     # read mesh HIT configuration
     hit_params = YAML::load_file('config/hits/mesh.yml')
     abort("config/hits/mesh.yml not found") if hit_params.nil?
 
     # fetch csv file path from the input argument
+    # row: [filename,category,x0,y0,x1,y1]
     csv_path = args[:bbox_list]
-    abort("1 argument expected: path to csv file listing bounding box annotations") if csv_path.nil? # (filename, category, x0,y0,x1,y1)
+    abort("1 argument expected: path to csv file listing bounding box annotations") if csv_path.nil?
 
-    # read :bbox_list
+    # read :bbox_list csv file
     p "Reading CSV file #{csv_path}"
     count = 0
     CSV.foreach(csv_path) do |row| # read a line at a time
-      count += 1
+      count = count+1
       begin
+	# read image path, category and bbox info from the row
 	image_path = row[0]
 	category = row[1]
 	x0 = row[2]
 	x1 = row[3]
 	y0 = row[4]
 	y1 = row[5]
-
-	p image_path
-	p category
-	p x0+" "+x1+" "+y0+" "+y1
+	
+	# for debugging
+	p "image_path is "+image_path
+	p "category is "+category
+	p "bbox is "+x0+" "+x1+" "+y0+" "+y1
 	
 	# check existence of image path, category and bbox annotation
 	abort("six arguments expected: image path, category, x0, x1, y0, y1") if image_path.nil? or category.nil? or x0.nil? or x1.nil? or y0.nil? or y1.nil?
-	#abort("image file not found in app/assets/images") if Rails.application.assets.find_Asset(image_path).nil?
+	abort("image file not found in app/assets/images") if Rails.application.assets.find_asset(image_path).nil?
 	abort("invalid category") if Category.find_by_name(category).nil?
 	abort("config/hits/mesh.yml not found") if hit_params.nil?	
 
-	url = INIT_CONFIG["HOST_BASE_URL"] + "mturk/mesh_annotation" #"mturk/edit_annotation"
-	p url
+	# load config files
+        mesh_params = YAML::load_file('config/hits/mesh.yml' )
+        orientation_params = YAML::load_file('config/hits/orientation.yml' )
+        keypoint_params = YAML::load_file('config/hits/keypoints.yml' )
+        hit_param_types = {mesh: mesh_params, orientation: orientation_params, keypoint: keypoint_params}
 
-	hit = create_hit(hit_params, url)
-	p "Successfully submitted hit #{hit.id}"
+	# save annotation to db
+	annotation = Annotation.create({:image_file => image_path, :category_name => category,
+				       :x0 => x0, :x1 => x1, :y0 => y0, :y1 => y1, :stage => 1})
+	rturk_hit = annotation.submit_hit(hit_param_types)
+	p "Successfully submitted hit #{rturk_hit.id}"
+	p "annotation.id is #{annotation.id}"	
+	#if annotation.save
+	#  p "Annotation was successfully saved"
+	#  rturk_hit = annotation.submit_hit(hit_param_types)
+	#  p "Successfully submitted hit #{rturk_hit.id}"
+	#else
+	#  annotation.errors
+	#  p "Annotation was not saved, skipping"
+	#end
 
       rescue StandardError => e
 	p "Unable to submit HIT for row #{count}:#{row.to_s}"
