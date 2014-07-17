@@ -9,9 +9,31 @@ w = @annotation.x1 - @annotation.x0
 h = @annotation.y1 - @annotation.y0
 box_style = "left:#{x}px;top:#{y}px;width:#{w}px;height:#{h}px;"
 
+image_width = 400 #@annotation.image_width
+image_height = 300 #@annotation.image_height
+image_aspect_ratio = image_height.to_f / image_width.to_f
+
+# maximum image size
+max_width = 500
+max_height = 400
+aspect_ratio = max_height.to_f / max_width.to_f
+
+# scale the image
+scale = max_height.to_f/image_height.to_f if aspect_ratio<=image_aspect_ratio
+scale = max_width.to_f/image_width.to_f if aspect_ratio>image_aspect_ratio
+image_width = (image_width*scale).round
+image_height = (image_height*scale).round
+
+# scale the bounding box
+x = (x*scale).round
+y = (y*scale).round
+w = (w*scale).round
+h = (h*scale).round
+box_style = "left:#{x}px;top:#{y}px;width:#{w}px;height:#{h}px;"
+
 %>
 
-<div class="viewport-wrap">
-  <%= image_tag img_file, :id => "task_image", :class => "viewport",:options => {draggable: "false"} %>
+<div class="viewport-wrap2">
+  <%= image_tag img_file, :id => "task_image", :width => image_width, :height => image_height,:options => {draggable: "false"} %>
   <div class="bounding_box" style="<%= box_style %>"></div>
 </div>
