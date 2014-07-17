@@ -2,7 +2,7 @@ require 'json'
 
 class MturkController < ApplicationController
   before_filter :set_mturk_attributes
-  before_filter :set_annotation, :only => [ :edit_annotation ]
+  before_filter :set_annotation, :only => [ :edit_annotation, :mesh_annotation ]
   
   skip_before_filter :verify_authenticity_token
   
@@ -12,9 +12,6 @@ class MturkController < ApplicationController
     @category = Category.find_by_name(params[:category]) || render_401
   end
 
-  def mesh_annotation
-    render "mesh"
-  end
   def edit_annotation
     if @annotation.stage == Annotation::STAGES[:mesh]
       @meshes = @annotation.category.meshes
@@ -90,7 +87,6 @@ protected
   def set_mturk_attributes
     @assignmentId = params['assignmentId']
     @preview = (@assignmentId == 'ASSIGNMENT_ID_NOT_AVAILABLE')
-
     if !@assignmentId.nil?
       @formurl = "https://#{RTurk.sandbox? ? "workersandbox" : "www"}.mturk.com/mturk/externalSubmit"
     else
