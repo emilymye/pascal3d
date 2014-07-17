@@ -122,8 +122,8 @@ class Annotation < ActiveRecord::Base
     end
 
     filename = "config/hits/#{ type }.yml"
-
     hit_params = params[type]|| YAML::load_file(filename)
+    
     url = INIT_CONFIG["HOST_BASE_URL"] + "mturk/edit_annotation/#{id}"
 
     begin
