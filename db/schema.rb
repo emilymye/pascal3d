@@ -22,6 +22,8 @@ ActiveRecord::Schema.define(version: 20140601020232) do
     t.integer  "x1",                               null: false
     t.integer  "y0",                               null: false
     t.integer  "y1",                               null: false
+    t.integer  "image_height",			   null: false
+    t.integer  "image_width",			   null: false
     t.string   "mesh"
     t.decimal  "elevation",        default: 0.0
     t.decimal  "azimuth",          default: 0.0
