@@ -139,6 +139,19 @@ body{
   }
 }
 
+.table{display:table;}
+.table-row{display:table-row;}
+.table-cell{
+  display:table-cell;
+  padding-left:1px;
+  padding-right:1px;
+  .mesh-option{
+    display:inline-block;
+    width:300px;
+    text-align:center;
+  }
+}
+
 .hide {
   display:none;
 }
