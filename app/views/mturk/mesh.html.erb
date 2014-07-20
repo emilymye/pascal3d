@@ -4,7 +4,7 @@
 <div class = "container">
 <% if @annotation.nil? %>
 <div class="error">Error- this HIT is invalid. Please disregard.</div>
-<% else %>  
+<% else %> 
   <% cat_pretty = @annotation.category_name.humanize.downcase %>
   <form id="mesh_form" action="<%= @formurl %>"  method="post">
     <%= hidden_field_tag 'assignmentId', @assignmentId%>
@@ -12,7 +12,7 @@
     <%= hidden_field_tag 'annotation_id', @annotation.id %>
     <div class= "instructions">
       <h1>Match a 3D model to the object.</h1>
-      <p>Choose the model that most closely resembles the indicated <%= cat_pretty %> (within the red box) in the photo. Scroll left/right in the box below to see all options.</p>
+      <p>Choose the model that most closely resembles the indicated <%= cat_pretty %> (within the red box) in the right photo. Scroll left/right in the box below to see all options.</p>
       <%if @preview %>
       You will see a submit button here once you have accepted the task.
       <%else %>
@@ -22,7 +22,8 @@
     <div class= "images">
       <%= render :partial => "annotated_image", :locals => { :img_file => @annotation.image_file, :annotation => @annotation } %>
     </div>
-    <div class= "horizontal_scroll">
+
+<!--    <div class= "horizontal_scroll">
       <% @meshes.each do |m| %>
         <div class="mesh-option">
           <%= render :partial => "gl_viewer", :locals => { :small => true, :mesh => m} %>
@@ -30,6 +31,27 @@
         </div>
       <% end %>
     </div>
+-->
+
+    <div class= "table">
+      <% @meshes.each_with_index do |m, index| %>
+        <% if index.modulo(4).zero? %> <!--create a new row after every 4 cells-->
+
+          <div class= "table-row">
+            <% for i in 0..3%>
+              <% if (index+i+1) > @meshes.length then %><% break %><% end %>
+              <div class= "table-cell"><div class="mesh-option">
+                <%= render :partial => "gl_viewer", :locals => { :small => true, :mesh => @meshes[index+i]} %>
+                <br/><input type="radio" name="mesh_file" required value="<%=@meshes[index+i]%>" />
+              </div></div>
+            <% end %>                                         
+          </div>
+
+        <% end %>
+      <% end %>
+    </div><!--end table-->
+
+
   </form>
 
 <% end %>
