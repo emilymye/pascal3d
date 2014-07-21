@@ -1,12 +1,18 @@
 <div class="error hide">
   Error: Your browser does not support WebGL - you cannot do this task.<br>
   You can enable WebGL in your browser by following the instructions below. <br>
-  
-  <p><span style="font-weight:bold">Internet Explorer</span></p>
+ 
+  <h2>Desktop Browsers</h2>
+  <p><span style="font-weight:bold">Internet Explorer</span><br> You need the latest version: IE11. IE9,10 do not support WebGL.<br></p>
   <p><span style="font-weight:bold">Chrome</span><br> 1) Open Google Chrome. (latest version recommended)<br> 2) Type <u>chrome://flags</u> in the address bar.<br> 3) Scroll down to <u>"Disable WebGL"</u> and click "Disable".<br> 4) Relaunch the browser.<br></p>
   <p><span style="font-weight:bold">Safari</span><br> 1) Open Safari.<br> 2) Open [Safari]-[Preferences...] from menubar.<br> 3) Go to the "Advanced" tab.<br> 4) At the bottom, check <u>"Show Develop menu in menu bar"</u> in the checkbox.<br> 5) In the menubar, you can now find [Develop] menu. Select <u>"Enable WebGL"</u>.<br>
   </p>
-  <p><span style="font-weight:bold">Firefox</span><br> 1) Open Firefox.<br> 2) Type <u>about:config</u> in the address bar.<br> 3) Type <u>"webgl"</u> in the search bar.<br> 4) Enable <u>"webgl.forceenabled"</u>. (Mae sure if its value is "true".)<br> 5) Make sure the value of <u>"webgl.disabled"</u> is "false". If not, toggle the value.<br> * You can switch the value between "true" and "false" either by [mouse-double-click] or [mouse-right-button]-[choose toggle].<br></p>
+  <p><span style="font-weight:bold">Firefox</span><br> 1) Open Firefox. (latest version recommended)<br> 2) Type <u>about:config</u> in the address bar.<br> 3) Type <u>"webgl"</u> in the search bar.<br> 4) Enable <u>"webgl.forceenabled"</u>. (Make sure if its value is "true".)<br> 5) Make sure the value of <u>"webgl.disabled"</u> is "false". If not, toggle the value.<br> * You can switch the value between "true" and "false" either by [mouse-double-click] or [mouse-right-button]-[choose toggle].<br></p>
+
+
+  <h2>Mobile Browsers</h2>
+  Firefox mobile for Android supports WebGL natively. However, we do not recommend to use mobile browsers for the task.
+
 </div>
 
 
@@ -23,7 +29,7 @@
     <div class= "instructions_mesh">
       <!--<h1>Match a 3D model to the object.</h1>-->
       <h2>Instruction</h2>
-      <p>Choose <span style="font-weight:bold;color:blue">the 3D model</span> that is <span style="font-weight:bold;color:red">most similar</span> to the indicated <b><%= cat_pretty %></b> within the red bounding box.</p>
+      <p>Choose the 3D model (shown in blue) that is <span style="font-weight:bold;color:red">most similar</span> to the indicated <b><%= cat_pretty %></b> within the red bounding box.</p>
      
       <b>Examples:</b><br>
       <div class="table">
