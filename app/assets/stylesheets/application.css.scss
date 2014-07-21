@@ -44,7 +44,7 @@ body{
 
 .container {
   width:960px;
-  height:600px;
+  height:1000px;
 }
 
 .notice, .error{
@@ -66,13 +66,26 @@ body{
   float:left;
   width:500px;
   margin:0 15px 15px;
-  height:300px;
+  height:500px;
+}
+
+.instructions_mesh{
+  float:left;
+  width:600px;
+  margin:2px 15px 1px 1px;
+  border-top:2px solid #c0c0c0;
+  border-bottom:2px solid #c0c0c0;
 }
 
 .images{
   float:left;
   display:inline-block;
   width:400px;
+}
+
+.images_mesh{
+  clear:both;
+  padding-left:2px;
 }
 
 .viewport{
@@ -100,7 +113,6 @@ body{
 .viewport-wrap2{
   width:350px;
   height:300px;
-  display:inline-block;
   position:relative;
 }
 
@@ -143,7 +155,6 @@ body{
 .table-row{display:table-row;}
 .table-cell{
   display:table-cell;
-  padding-left:1px;
   padding-right:1px;
   .mesh-option{
     display:inline-block;
