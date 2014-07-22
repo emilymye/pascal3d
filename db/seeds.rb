@@ -58,7 +58,7 @@ meshes: [ "bicycle01.json","bicycle02.json","bicycle03.json","bicycle04.json",
   keypoints: ["back_upper_left", "back_upper_right", "seat_upper_left", "seat_upper_right", "seat_lower_left", 
               "seat_lower_right", "leg_upper_left", "leg_upper_right", "leg_lower_left", "leg_lower_right"],
   meshes: [ "chair01.json","chair02.json","chair03.json","chair04.json","chair05.json","chair06.json",
-            "chair07.json","chair08.json","chair09.json","chair10.json" ]
+            "chair07.json","chair08.json","chair09.json","chair10.json","incorrect_bbox" ]
 },
 { 
   name: 'dining_table', 
@@ -176,7 +176,8 @@ meshes: [ "bicycle01.json","bicycle02.json","bicycle03.json","bicycle04.json",
               "outscreen_upper_left","outscreen_upper_right","outscreen_lower_left","outscreen_lower_right",
               "key_upper_left","key_upper_right","key_lower_left","key_lower_right",
               "back_upper_left","back_upper_right","back_lower_left","back_lower_right"],
-  meshes: ["cellphone01.json","cellphone02.json","cellphone03.json","cellphone04.json"]
+  meshes: ["cellphone01.json","cellphone02.json","cellphone03.json","cellphone04.json",
+           "cellphone05.json","cellphone06.json","cellphone07.json","incorrect_bbox"]
 },
 {
   name: 'clock',
