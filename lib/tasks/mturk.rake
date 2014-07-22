@@ -209,14 +209,14 @@ namespace :mturk do
   end
 
   desc 'Read csv file of images and their bounding box annotations, and creates new mesh HITs'
-  task :submit_bbox_list, [:bbox_list] => :environment do |t, args|
+  task :submit_hits_mesh, [:bbox_list] => :environment do |t, args|
 
     # read mesh HIT configuration
     hit_params = YAML::load_file('config/hits/mesh.yml')
     abort("config/hits/mesh.yml not found") if hit_params.nil?
 
     # fetch csv file path from the input argument
-    # row: [filename,category,x0,y0,x1,y1]
+    # row: [filename,category,x0,y0,x1,y1,image_height,image_width]
     csv_path = args[:bbox_list]
     abort("1 argument expected: path to csv file listing bounding box annotations") if csv_path.nil?
 
@@ -230,17 +230,21 @@ namespace :mturk do
 	image_path = row[0]
 	category = row[1]
 	x0 = row[2]
-	x1 = row[3]
-	y0 = row[4]
+	x1 = row[4]
+	y0 = row[3]
 	y1 = row[5]
+	h = row[6]
+	w = row[7]
 	
 	# for debugging
 	p "image_path is "+image_path
 	p "category is "+category
 	p "bbox is "+x0+" "+x1+" "+y0+" "+y1
+	p "image height is "+h
+	p "image width is "+w
 	
 	# check existence of image path, category and bbox annotation
-	abort("six arguments expected: image path, category, x0, x1, y0, y1") if image_path.nil? or category.nil? or x0.nil? or x1.nil? or y0.nil? or y1.nil?
+	abort("six arguments expected: image path, category, x0, x1, y0, y1") if image_path.nil? or category.nil? or x0.nil? or x1.nil? or y0.nil? or y1.nil? or h.nil? or w.nil?
 	abort("image file not found in app/assets/images") if Rails.application.assets.find_asset(image_path).nil?
 	abort("invalid category") if Category.find_by_name(category).nil?
 	abort("config/hits/mesh.yml not found") if hit_params.nil?	
@@ -252,8 +256,8 @@ namespace :mturk do
         hit_param_types = {mesh: mesh_params, orientation: orientation_params, keypoint: keypoint_params}
 
 	# save annotation to db
-	annotation = Annotation.create({:image_file => image_path, :category_name => category,
-				       :x0 => x0, :x1 => x1, :y0 => y0, :y1 => y1, :stage => 1})
+	annotation = Annotation.create({:image_file => image_path, :category_name => category, :stage => 1,
+				       :x0 => x0, :x1 => x1, :y0 => y0, :y1 => y1, :image_width => w, :image_height => h})
 	rturk_hit = annotation.submit_hit(hit_param_types)
 	p "Successfully submitted hit #{rturk_hit.id}"
 	p "annotation.id is #{annotation.id}"	
@@ -274,4 +278,11 @@ namespace :mturk do
     end # end CSV.foreach
   end # end task
 
+  desc 'Read csv file of images and their bounding box annotations, and creates new mesh HITs'
+  task :submit_hits_orientation, [:anno_list] => :environment do |t, args|
+  end # end task
+
+  desc 'Read csv file of ...'
+  task :submit_hits_keypoints, [:anno_list] => :environment do |t, args|
+  end # end task
 end
