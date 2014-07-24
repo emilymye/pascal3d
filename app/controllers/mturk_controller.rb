@@ -27,11 +27,14 @@ class MturkController < ApplicationController
   
   def mesh_annotation
     if @annotation.stage == Annotation::STAGES[:mesh]
+      @meshes = @annotation.category.meshes
       render "mesh"
     else
       render "complete_annotation"
     end
   end
+
+ 
 
   def test_form
     if !INIT_CONFIG["HOST_BASE_URL"].starts_with?("localhost")
