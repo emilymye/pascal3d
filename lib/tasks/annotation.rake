@@ -9,6 +9,11 @@ namespace :annotation do
     p "Annotation with id #{id} deleted"
   end
 
+  desc 'delete all annotations'
+  task :delete_all => :environment do
+    count = Annotation.destroy_all
+    p "#{count} annotations deleted"
+  end
 
   desc 'delete complete annotations'
   task :delete_complete => :environment do
