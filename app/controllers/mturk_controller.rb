@@ -34,7 +34,21 @@ class MturkController < ApplicationController
     end
   end
 
- 
+  def orientation_annotation
+    if @annotation.stage == Annotation::STAGES[:orientation]
+      render "orientation"
+    else
+      render "complete_annotation"
+    end
+  end
+
+  def keypoints_annotation
+    if @annotation.stage == Annotation::STAGES[:keypoints]
+      render "keypoints"
+    else
+      render "complete_annotation"
+    end
+  end 
 
   def test_form
     if !INIT_CONFIG["HOST_BASE_URL"].starts_with?("localhost")
