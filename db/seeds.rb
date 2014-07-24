@@ -177,12 +177,14 @@ meshes: [ "bicycle01.json","bicycle02.json","bicycle03.json","bicycle04.json",
               "key_upper_left","key_upper_right","key_lower_left","key_lower_right",
               "back_upper_left","back_upper_right","back_lower_left","back_lower_right"],
   meshes: ["cellphone01.json","cellphone02.json","cellphone03.json","cellphone04.json",
-           "cellphone05.json","cellphone06.json","cellphone07.json","incorrect_bbox"]
+           "cellphone05.json","cellphone06.json","cellphone07.json","cellphone08.json",
+           "cellphone09.json","cellphone10.json","cellphone11.json","incorrect_bbox"]
 },
 {
   name: 'clock',
   keypoints: ["tmp"],
-  meshes: ["clock01.json"]
+  meshes: ["clock01.json","clock02.json","clock03.json","clock04.json","clock05.json","clock06.json",
+	   "clock07.json","clock08.json","clock09.json","incorrect_bbox"]
 },
 {
   name: 'coffee_maker',
