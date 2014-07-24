@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: meshes
+# Table name: categories 
 #
 #  id         :integer          not null, primary key
 #  name       :string(255)      not null, index
