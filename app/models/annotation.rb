@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: meshes
+# Table name: annotations 
 #
 #  id                 :integer          not null, primary key
 #  submitted          :boolean          not null, default false
@@ -11,6 +11,8 @@
 #  x1                 :integer          not null
 #  y0                 :integer          not null
 #  y1                 :integer          not null
+#  image_height	      :integer		null
+#  image_width	      :integer		null
 #  mesh               :string(255)      
 #  elevation          :decimal          
 #  azimuth            :decimal          
