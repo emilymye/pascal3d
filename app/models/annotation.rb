@@ -123,12 +123,22 @@ class Annotation < ActiveRecord::Base
 
     filename = "config/hits/#{ type }.yml"
     hit_params = params[type]|| YAML::load_file(filename)
-    
-    if type == "mesh"
+   
+    case type
+    when "mesh"
       url = INIT_CONFIG["HOST_BASE_URL"] + "mturk/mesh_annotation/#{id}"
+    when "orientation"
+      url = INIT_CONFIG["HOST_BASE_URL"] + "mturk/orientation_annotation/#{id}"
+    when "keypoints"
+      url = INIT_CONFIG["HOST_BASE_URL"] + "mturk/keypoints_annotation/#{id}"
     else
       url = INIT_CONFIG["HOST_BASE_URL"] + "mturk/edit_annotation/#{id}"
-    end
+    end 
+    #if type == "mesh"
+    #  url = INIT_CONFIG["HOST_BASE_URL"] + "mturk/mesh_annotation/#{id}"
+    #else
+    #  url = INIT_CONFIG["HOST_BASE_URL"] + "mturk/edit_annotation/#{id}"
+    #end
 
     begin
       RTurk::Utilities.retry_on_unavailable(1) do
