@@ -171,6 +171,22 @@ namespace :mturk do
     end
   end
 
+  desc 'expire all hits uploaded'
+  task :expire_all => :environment do
+    hits = RTurk::Hit.all
+    puts "#{hits.size} hits.\n"
+    next if hits.empty?
+    
+    puts "Expiring all hits"
+    hits.each do |hit|
+      RTurk::Utilities.retry_on_unavailable(1) do
+        # unless expired ==> STAGE==Unassignmable
+        #hit.expire!
+        #hit.dispose!
+        hit.disable!
+      end
+    end
+  end
 
   desc 'submit annotations ready to be edited'
   task :resubmit => :environment do |t,args|
