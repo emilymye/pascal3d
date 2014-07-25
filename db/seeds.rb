@@ -324,22 +324,23 @@ meshes: [ "bicycle01.json","bicycle02.json","bicycle03.json","bicycle04.json",
 {
   name: 'laptop',
   keypoints: ["tmp"],
-  meshes: ["laptop01.json"]
+  meshes: ["laptop01.json","laptop02.json","laptop03.json","laptop04.json","laptop05.json","incorrect_bbox"]
 },
 {
   name: 'lighter',
   keypoints: ["tmp"],
-  meshes: ["lighter01.json"]
+  meshes: ["lighter01.json","lighter02.json","lighter03.json","lighter04.json","lighter05.json","incorrect_bbox"]
 },
 {
   name: 'mailbox',
   keypoints: ["tmp"],
-  meshes: ["mailbox01.json"]
+  meshes: ["mailbox01.json","mailbox02.json","mailbox03.json","mailbox04.json","mailbox05.json",
+	   "mailbox06.json","mailbox07.json","mailbox08.json","incorrect_bbox"]
 },
 {
   name: 'microphone',
   keypoints: ["tmp"],
-  meshes: ["microphone01.json"]
+  meshes: ["microphone01.json","incorrect_bbox"]
 },
 {
   name: 'microwave',
