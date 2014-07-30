@@ -29,23 +29,23 @@
     <div class= "instructions_mesh">
       <!--<h1>Match a 3D model to the object.</h1>-->
       <h2>Instruction</h2>
-      <p>Choose the 3D model (shown in blue) that is <span style="font-weight:bold;color:red">most similar</span> to the indicated <b><%= cat_pretty %></b> within the red bounding box.</p>
+      <p>Choose the 3D model (shown in blue) that is <span style="font-weight:bold">most similar</span> to the indicated <span style="font-weight:bold;color:red"><%= cat_pretty %></span> within the red bounding box. In case where the indicated <b>bounding box is wrong</b>, choose the last option - <i>Wrong or Invisible bounding box.</i><br><br>** The bounding box is wrong if <br> 1) <u>it contains many <%=cat_pretty%>s</u>, 2) <u>it doesn't contain any <%=cat_pretty%></u>, or 3) <u>it is invisible.</u><br><span style="font-weight:bold;color:red">If the bounding box around the "<%=cat_pretty%>" is correct, you should NOT choose "Wrong or Invisible bounding box". Instead, you should choose the MOST SIMILAR 3d model. We will block workers who abose the "Wrong or Invisible bounding box" option.</span></p>
      
       <b>Examples:</b><br>
       <div class="table">
       <div class="table-row"><div class="table-cell">
         category "chair"<br>
-        <img src="http://cvgl.stanford.edu/projects/PASCAL3D_AMT/mesh_instruction/chair.png" height="100" width="140" align="middle">
-        <img src="http://cvgl.stanford.edu/projects/PASCAL3D_AMT/mesh_instruction/meshes_chair.png" height="110" width="430" align="middle">
+        <img src="http://cvgl.stanford.edu/projects/PASCAL3D_AMT/mesh_instruction/chair.png" height="80" width="140" align="middle">
+        <img src="http://cvgl.stanford.edu/projects/PASCAL3D_AMT/mesh_instruction/meshes_chair.png" height="80" width="430" align="middle">
       </div></div>
       <div class="table-row"><div class="table-cell">
         category "airplane"<br>
-        <img src="http://cvgl.stanford.edu/projects/PASCAL3D_AMT/mesh_instruction/aeroplane.png" height="90" width="120" align="middle">
+        <img src="http://cvgl.stanford.edu/projects/PASCAL3D_AMT/mesh_instruction/aeroplane.png" height="80" width="120" align="middle">
         <img src="http://cvgl.stanford.edu/projects/PASCAL3D_AMT/mesh_instruction/meshes_aeroplane.png" height="80" width="450" align="middle">
       </div></div>
       <div class="table-row"><div class="table-cell">
         category "motorbike"<br>
-        <img src="http://cvgl.stanford.edu/projects/PASCAL3D_AMT/mesh_instruction/motorbike.png" height="90" width="140" align="middle">
+        <img src="http://cvgl.stanford.edu/projects/PASCAL3D_AMT/mesh_instruction/motorbike.png" height="80" width="140" align="middle">
         <img src="http://cvgl.stanford.edu/projects/PASCAL3D_AMT/mesh_instruction/meshes_motorbike.png" height="80" width="430" align="middle">
       </div></div>
       </div>
