@@ -2,7 +2,7 @@ require 'json'
 
 class MturkController < ApplicationController
   before_filter :set_mturk_attributes
-  before_filter :set_annotation, :only => [ :edit_annotation, :mesh_annotation ]
+  before_filter :set_annotation, :only => [ :edit_annotation, :mesh_annotation, :orientation_annotation, :keypoints_annotation]
   
   skip_before_filter :verify_authenticity_token
   
@@ -36,6 +36,7 @@ class MturkController < ApplicationController
 
   def orientation_annotation
     if @annotation.stage == Annotation::STAGES[:orientation]
+      # @meshes = @annotation.category.meshes
       render "orientation"
     else
       render "complete_annotation"
