@@ -29,7 +29,7 @@
     <div class= "instructions_mesh">
       <!--<h1>Match a 3D model to the object.</h1>-->
       <h2>Instruction</h2>
-      <p>Choose the 3D model (shown in blue) that is <span style="font-weight:bold">most similar</span> to the indicated <span style="font-weight:bold;color:red"><%= cat_pretty %></span> within the red bounding box. In case where the indicated <b>bounding box is wrong</b>, choose the last option - <i>Wrong or Invisible bounding box.</i><br><br>** The bounding box is wrong if <br> 1) <u>it contains many <%=cat_pretty%>s</u>, 2) <u>it doesn't contain any <%=cat_pretty%></u>, or 3) <u>it is invisible.</u><br><span style="font-weight:bold;color:red">If the bounding box around the "<%=cat_pretty%>" is correct, you should NOT choose "Wrong or Invisible bounding box". Instead, you should choose the MOST SIMILAR 3d model. We will block workers who abose the "Wrong or Invisible bounding box" option.</span></p>
+      <p>Choose the 3D model (shown in blue) that is <span style="font-weight:bold">most similar</span> to the indicated <span style="font-weight:bold;color:red"><%= cat_pretty %></span> within the red bounding box. In case where the indicated <b>bounding box is wrong</b>, choose the last option - <i>Wrong or Invisible bounding box.</i><br><br>** The bounding box is wrong if <br> 1) <u>it contains many <%=cat_pretty%>s</u>, 2) <u>it doesn't contain any <%=cat_pretty%></u>, or 3) <u>it is invisible.</u><br><br><span style="font-weight:bold;color:red">DO NOT CHOOSE "Wrong or Invisible bounding box" OPTION</span><b> if the bounding box around the "<%=cat_pretty%>" is correct. Instead, you should choose the MOST SIMILAR 3d model. We will</b> <span style="font-weight:bold;color:red">BLOCK</span> <b>workers who abuse the "Wrong or Invisible bounding box" option. FYI,</b> <span style="font-weight:bold;color:red">most bounding boxes are correct.</span></p>
      
       <b>Examples:</b><br>
       <div class="table">
@@ -49,7 +49,7 @@
         <img src="http://cvgl.stanford.edu/projects/PASCAL3D_AMT/mesh_instruction/meshes_motorbike.png" height="80" width="430" align="middle">
       </div></div>
       </div>
-      <br>You <span style="color:red;font-weight:bold">MUST</span> make one choice. If you submit the HIT without choosing anything, we will <span style="font-weight:bold;color:red">REJECT</span> it.<br><br>
+      <br><br>
 
     </div>
 
