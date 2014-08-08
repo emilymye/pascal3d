@@ -13,6 +13,9 @@
       <li><a href="#mturk">mturk</a><ul>
         <li><a href="#submit_list">submit_list</a></li>
         <li><a href="#submit_image">submit_image</a></li>
+	<li><a href="#submit_hits_mesh">submit_hits_mesh</a></li>
+	<li><a href="#submit_hits_orientation">submit_hits_orientation</a></li>
+	<li><a href="#submit_hits_keypoints">submit_hits_keypoints</a></li>
         <li><a href="#sync_all">sync_all</a></li>
         <li><a href="#resubmit">resubmit</a></li>
         <li><a href="#reset">reset</a></li>
@@ -20,6 +23,8 @@
       <li><a href="#annotation">annotation</a><ul>
         <li><a href="#exportcomplete">export_complete</a></li>
         <li><a href="#exportbytask">export_by_task</a></li>
+	<li><a href="#delete">delete</a></li>
+	<li><a href="#deleteall">delete_all</a></li>
         <li><a href="#deletecomplete">delete_complete</a></li>
       </ul></li>
     </ul>
@@ -116,6 +121,22 @@
           <dt><em>String</em> <strong>category</strong></dt>
           <dd>Category name</dd>
         </dl>
+      </div>
+    </div>
+
+    <div id="submit_hits_mesh">
+      <pre>rake mturk:submit_hits_mesh["mesh_list.csv"]</pre>
+      <div class="desc">
+        <p>Submit a list of images with bounding box annotations to upload HITs for mesh tasks.</p>
+        <dl class="params"></dl>
+      </div>
+    </div>
+
+    <div id="submit_hits_orientation">
+      <pre>rake mturk:submit_hits_orientation["orientation_list.csv"]</pre>
+      <div class="desc">
+        <p>Submit a list of images with bounding box and mesh annotations to upload HITs for orientation tasks.</p>
+        <dl class="params"></dl>
       </div>
     </div>
 
