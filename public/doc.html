@@ -16,8 +16,8 @@
 	<li><a href="#submit_hits_mesh">submit_hits_mesh</a></li>
 	<li><a href="#submit_hits_orientation">submit_hits_orientation</a></li>
 	<li><a href="#submit_hits_keypoints">submit_hits_keypoints</a></li>
-        <li><a href="#sync_all">sync_all</a></li>
         <li><a href="#resubmit">resubmit</a></li>
+	<li><a href="#sync_all">sync_all</a></li>
         <li><a href="#reset">reset</a></li>
       </ul></li>
       <li><a href="#annotation">annotation</a><ul>
@@ -93,9 +93,9 @@
   </div>
   <div id="raketasks">
     <h2>Commands</h2>
-    <p>Generally, all interaction with AMT is done through Rake tasks. Documentation for Rake can be found <a href="http://docs.seattlerb.org/rake/">here</a>.</p></p>In general, run a rake task with command</p>
+    All interaction with AMT is done through Rake tasks. Documentation for Rake can be found <a href="http://docs.seattlerb.org/rake/">here</a>.<br>You can run a rake task with the following command:</p>
     <pre>rake &lt;namespace&gt;:&lt;cmd&gt;[ arg1, "stringarg2", ... ]</pre>
-    <p> These tasks are found in lib/rake/filename.rake - if you want to add functionality for working with AMT, here is a good place.</p>
+    <p> Tasks are defined in lib/tasks/<i>namespace</i>.rake. If you want to add functionality for working with AMT, here is a good place.</p>
 
 
     <h3 class="header" id="mturk">mturk</h3>
@@ -140,6 +140,23 @@
       </div>
     </div>
 
+    <div id="submit_hits_keypoints">
+      <pre>rake mturk:submit_hits_keypoints["keypoints_list.csv"]</pre>
+      <div class="desc">
+        <p>Submit a list of images with bounding box, mesh, and orientation annotations to upload HITs for keypoints tasks.</p>
+        <dl class="params"></dl>
+      </div>
+    </div>
+
+    <div id="resubmit">
+      <pre>rake mturk:resubmit[ autosubmit? ]</pre>
+      <div class="desc">
+        <p>
+          Finds annotations that have not been submitted and are ready for next task, and creates new HITs. Can be done automatically in sync_all, but in case you want to check data you can do that here.
+        </p>
+      </div>
+    </div>
+
     <div id="sync_all">
       <pre>rake mturk:sync_all[ autosubmit? ]</pre>
       <div class="desc"> 
@@ -150,15 +167,6 @@
           <dt><em>bool</em> <strong>autosubmit</strong></dt>
           <dd>Submit new HITs automatically (essentially, mturk:resubmit) - defaults to false</dd>
         </dl>
-      </div>
-    </div>
-
-    <div id="resubmit">
-      <pre>rake mturk:resubmit[ autosubmit? ]</pre>
-      <div class="desc"> 
-        <p>
-          Finds annotations that have not been submitted and are ready for next task, and creates new HITs. Can be done automatically in sync_all, but in case you want to check data you can do that here.
-        </p>
       </div>
     </div>
 
