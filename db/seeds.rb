@@ -269,7 +269,9 @@ meshes: [ "bicycle01.json","bicycle02.json","bicycle03.json","bicycle04.json",
 {
   name: 'fire_extinguisher',
   keypoints: ["tmp"],
-  meshes: ["fire_extinguisher01.json"]
+  meshes: ["fire_extinguisher01.json","fire_extinguisher02.json","fire_extinguisher03.json","fire_extinguisher04.json",
+	   "fire_extinguisher05.json","fire_extinguisher06.json","fire_extinguisher07.json","fire_extinguisher08.json",
+	   "fire_extinguisher09.json","incorrect_bbox"]
 },
 {
   name: 'fish_tank',
@@ -390,7 +392,8 @@ meshes: [ "bicycle01.json","bicycle02.json","bicycle03.json","bicycle04.json",
 {
   name: 'paintbrush',
   keypoints: ["tmp"],
-  meshes: ["paintbrush01.json"]
+  meshes: ["paintbrush01.json","paintbrush02.json","paintbrush03.json","paintbrush04.json",
+	   "paintbrush05.json","paintbrush06.json","incorrect_bbox"]
 },
 {
   name: 'pan',
@@ -459,7 +462,9 @@ meshes: [ "bicycle01.json","bicycle02.json","bicycle03.json","bicycle04.json",
 {
   name: 'road_pole',
   keypoints: ["tmp"],
-  meshes: ["road_pole01.json"]
+  meshes: ["road_pole01.json","road_pole02.json","road_pole03.json","road_pole04.json","road_pole05.json","road_pole06.json",
+	   "road_pole07.json","road_pole08.json","road_pole09.json","road_pole10.json","road_pole11.json","road_pole12.json",
+	   "road_pole13.json","road_pole14.json","road_pole15.json","road_pole16.json","road_pole17.json","incorrect_bbox"]
 },
 {
   name: 'satellite_dish',
