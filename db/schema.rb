@@ -27,6 +27,8 @@ ActiveRecord::Schema.define(version: 20140601020232) do
     t.string   "mesh"
     t.decimal  "elevation",        default: 0.0
     t.decimal  "azimuth",          default: 0.0
+    t.string   "bbox_validity",    		   null: true
+    t.string   "mesh_validity",    		   null: true
     t.text     "keypoint_matches"
     t.datetime "created_at"
     t.datetime "updated_at"
