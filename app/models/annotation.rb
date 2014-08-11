@@ -15,7 +15,9 @@
 #  image_width	      :integer		null
 #  mesh               :string(255)      
 #  elevation          :decimal          
-#  azimuth            :decimal          
+#  azimuth            :decimal
+#  bbox_validity      :boolean	 	null
+#  mesh_validity      :boolean 		null          
 #  keypoint_matches   :text 
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
@@ -158,7 +160,7 @@ class Annotation < ActiveRecord::Base
 
 
   def export
-    # id, image_file, category_name, x0, x1, y0, y1, mesh, elevation, azimuth, keypoint_matches, created_at, updated_at
+    # id, image_file, category_name, x0, x1, y0, y1, mesh, elevation, azimuth, bbox_validity, mesh_validity, keypoint_matches, created_at, updated_at
     
     arr = [ 
       id,
@@ -168,6 +170,7 @@ class Annotation < ActiveRecord::Base
       mesh,
       elevation.to_f,
       azimuth.to_f,
+      bbox_validity, mesh_validity,
       keypoint_matches.count
     ]
 

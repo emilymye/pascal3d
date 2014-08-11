@@ -88,6 +88,8 @@ class MturkController < ApplicationController
       elsif type == "orientation"
         @annotation.elevation = params[:elevation]
         @annotation.azimuth = params[:azimuth]
+	@annotation.bbox_validity = params[:bbox_validity]
+	@annotation.mesh_validity = params[:mesh_validity]
         @annotation.keypoint_matches = JSON.parse(params[:keypoint_matches])
         @annotation.keypoint_matches.each do |k,v|
           v["px"] = nil
@@ -113,6 +115,8 @@ protected
   def set_mturk_attributes
     @assignmentId = params['assignmentId']
     @preview = (@assignmentId == 'ASSIGNMENT_ID_NOT_AVAILABLE')
+
+    # assignment ID not provided for the sandbox mode
     if !@assignmentId.nil?
       @formurl = "https://#{RTurk.sandbox? ? "workersandbox" : "www"}.mturk.com/mturk/externalSubmit"
     else
