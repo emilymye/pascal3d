@@ -464,7 +464,7 @@ meshes: [ "bicycle01.json","bicycle02.json","bicycle03.json","bicycle04.json",
   keypoints: ["tmp"],
   meshes: ["road_pole01.json","road_pole02.json","road_pole03.json","road_pole04.json","road_pole05.json","road_pole06.json",
 	   "road_pole07.json","road_pole08.json","road_pole09.json","road_pole10.json","road_pole11.json","road_pole12.json",
-	   "road_pole13.json","road_pole14.json","road_pole15.json","road_pole16.json","road_pole17.json","incorrect_bbox"]
+	   "road_pole13.json","road_pole14.json","road_pole15.json","road_pole16.json","incorrect_bbox"]
 },
 {
   name: 'satellite_dish',
