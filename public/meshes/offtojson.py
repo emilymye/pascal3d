@@ -32,7 +32,7 @@ def export(category,main_file):
 
     pts = {}
     #MAIN OFF FILE ([##].off)
-    keypointFiles = [f for f in glob.glob(meshname+"*.off")]
+    keypointFiles = [f for f in glob.glob(meshname+"+.off")] # regular expression: changed from * to +
     
     for kp in keypointFiles:
       kpname = os.path.splitext(kp)[0]
