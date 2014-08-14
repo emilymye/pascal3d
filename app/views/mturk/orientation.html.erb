@@ -26,44 +26,70 @@
     <% cat_pretty = @annotation.category_name.humanize.downcase %>
 
     <div class="instructions_orientation">
-      <h2>Instruction</h2>
+
+      <h2>Instruction : Rotating the 3D Model</h2>
       <p>
-        Rotate the 3D model (shown in blue) to look like the <span style="font-weight:bold;color:red"><%=cat_pretty%></span> within the red bounding box in the image. Use the buttons below to rotate the 3D model until it has the same orientation as the <%=cat_pretty%>'s in the image.<br><br>In the case where <b>the indicated bounding box is wrong</b> or given <b>3D model looks totally different</b> from the object in the bounding box, click corresponding checkboxes.<br>
+        Rotate the 3D model (shown in blue) to look like the <span style="font-weight:bold"><%=cat_pretty%></span> within the bounding box in the image. Use the buttons below to rotate the 3D model until it has the same orientation as the <%=cat_pretty%>'s in the image. <span style="font-weight:bold;color:red;text-decoration:underline">Even if the 3D model doesn't look exactly the same as the object in the bounding box, you <b>MUST</b> orient the model.</span> Otherwise, the HIT will be <span style="font-weight:bold;color:red">REJECTED</span>.<br>
       </p>
 
-      <b>Examples: Choosing correct orientation</b><br>
+      <b>Examples: </b><br>
       <div class="table">
-        <div class="table-row">
-	  <div class="table-cell">
-	    category "teapot"<br>
-            <img src="http://cvgl.stanford.edu/projects/PASCAL3D_AMT/orientation_instruction/teapot_good_and_bad.png" width="400" align="middle">
-	  </div>
-	</div>
-	<div class="table-row">
-	  <div class="table-cell">
-	    category "bench"<br>
-	    <img src="http://cvgl.stanford.edu/projects/PASCAL3D_AMT/orientation_instruction/bench_good_and_bad.png" width="400">
-	  </div>
-        </div>
-        <div class="table-row">
-	  <div class="table-cell">
-	    category "eyeglasses"<br>
-	    <img src="http://cvgl.stanford.edu/projects/PASCAL3D_AMT/orientation_instruction/eyeglasses_good_and_bad.png" width="400">
-	  </div>
-	</div>
+      <div class="table-row">
+      <div class="table-cell"><!--category "teapot"<br>-->
+      <img src="http://cvgl.stanford.edu/projects/PASCAL3D_AMT/orientation_instruction/teapot_good_and_bad.png" width="340" height="90">
+      <img src="http://cvgl.stanford.edu/projects/PASCAL3D_AMT/orientation_instruction/bench_good_and_bad.png" width="350" height="90">
+      </div></div>
+
+      <!--
+      <div class="table-row">
+      <div class="table-cell">
+      <img class="tab" src="http://cvgl.stanford.edu/projects/PASCAL3D_AMT/orientation_instruction/bench_good_and_bad.png" width="430" height="90">
+      </div></div>
+      -->
+  
+      <div class="table-row">
+      <div class="table-cell"><!--category "eyeglasses"<br>-->
+      <img src="http://cvgl.stanford.edu/projects/PASCAL3D_AMT/orientation_instruction/eyeglasses_good_and_bad.png" width="350" height="90">
+      </div></div>
       </div><!--end table-->
-      <br>
-      <b>Examples: Checkboxes</b><br>
+
+      <hr>
+
+      <h2>Instruction : Simple Questions</h2>
+      <p><!--After rotating the 3D model, you should answer to 2 questions.-->
+        <b>Q1</b> asks you whether the indicated bounding box is correct or not. You should choose <span style="font-weight:bold;color:red">wrong</span> if you feel hard to recognize one object in the bounding box. Bounding box is <b>wrong</b> if it doesn't contain any object or if it contains more than two objects. <b>FYI, most bounding boxes are correct.</b> 
+      </p>
+      <b>Example: "chair"</b><br>
       <div class="table">
-        <div class="table-row">
-          <div class="table-cell">
-          </div>
-        </div>
+      <div class="table-row">
+      <div class="table-cell">
+      <img src="http://cvgl.stanford.edu/projects/PASCAL3D_AMT/orientation_instruction/bbox_good_and_bad.png" width="650" height="120">
+      </div></div>
+      </div><!--end table-->
+      
+      <p>
+        <b>Q2</b> asks you whether the given 3D model is similar to the object in the bounding box. In most cases, 3D model does not look the same as an object in the image. If 3D model and the object in the image share some similarities, choose <span style="font-weight:bold;color:red">similar</span>. If you think they look <b>totally different</b>, choose <span style="font-weight:bold;color:red">not similar</span>.
+      </p>
+      <b>Example: "chair"</b><br>
+      <div class="table">
+      <div class="table-row">
+      <div class="table-cell">
+      <img src="http://cvgl.stanford.edu/projects/PASCAL3D_AMT/orientation_instruction/mesh_chair_good_and_bad.png" width="550" height="120">
+      </div></div>
       </div><!--end table-->
     </div><!--end instruction-->
 
+
+
     <div class = "images_mesh">
-      <%= render :partial => "annotated_image", :locals => { :img_file => @annotation.image_file, :annotation => @annotation } %>
+      <br><span style="font-weight:bold;font-size:20px">Rotate the 3D "<%=cat_pretty%>" model</span>
+      <p class="tab">
+        <span style="font-weight:bold;color:red"><u>Do not submit the HIT without rotating the 3D model.</u>
+	<br>Then, the HIT will be "<u>REJECTED</u>" and you will be "<u>BLOCKED</u>".
+	<br>(Several workers who didn't follow the instruction were already blocked.)</span>
+        <% if @preview %><br><br><b><i>** You cannot rotate the 3D model before accepting the HIT.</i></b><br><% end %>
+      </p>
+      <%= render :partial => "annotated_image", :locals => { :img_file => @annotation.image_file, :annotation => @annotation } %><br>
       <%= render :partial => "gl_viewer", :locals => { :mesh => mesh, :small => false, :is_mesh => true}%>
     </div>
 
@@ -73,19 +99,25 @@
       <a id="control_down" class="btn btn-blue">Down</a>
       <a id="control_right" class="btn btn-blue">Right</a>
       <a id="control_reset" class="btn btn-grey">Reset</a>
+      <br>(You can also use arrow keys on keyboard!)
+    </div><!--end buttons hide-->
+
       <form>
         <br>
-        The indicated bounding box is <br> 
-        <input type="radio" name="bbox_validity" required value="true">correct.<br><!--no problems-->
-        <input type="radio" name="bbox_validity" required value="false">wrong.<br><!--problems exist-->
-        <br>
-        The 3D model is <br>
-        <input type="radio" name="mesh_validity" required value="true"/>correct.<br>
-        <input type="radio" name="mesh_validity" required value="false"/>wrong.<br>
+        <h3>Q1. The indicated bounding box is </h3>
+        <input type="radio" name="bbox_validity" required value="true"><span style="font-size:16px">correct</span>. <!--no problems-->
+        <input type="radio" name="bbox_validity" required value="false"><span style="font-size:16px">wrong.</span><!--problems exist-->
+        &nbsp;&nbsp;<i>(In most cases, bounding boxes are "correct".)</i><br>
+        <h3>Q2. </b>The 3D model looks </h3>
+        <input type="radio" name="mesh_validity" required value="true"/><span style="font-size:16px">similar.</span>
+        <input type="radio" name="mesh_validity" required value="false"/><span style="font-size:16px">not similar.</span>
+        &nbsp;&nbsp;<i>(In case you chose "wrong" in Q1, select "not similar".)</i><br>
         <!--<input type="checkbox" name="bbox_bad" value="true">Check if bounding box is wrong.<br>
         <input type="checkbox" name="mesh_bad" value="true">Check if 3D model does not match with the indicated object.<br>-->
         <br>
       </form>
+
+      <!--preview or submit button-->
       <% if @preview %>
         <div>Once you begin this task, you will see a button to submit your annotation here.</div>
       <% else %>
@@ -99,8 +131,7 @@
           <%= hidden_field_tag 'assignmentId', @assignmentId %><br/>
           <%= submit_tag 'Submit', :class => "btn btn-green hide" %>
         </form>
-      <%end%>
-    </div><!--end buttons hide-->
+      <%end%><!--end preview or submit button-->
 
   <% end %>
 </div><!--end container-->
@@ -124,24 +155,26 @@
         resetOrientation();
         
         $(document).keydown( function(event){ 
-          if (event.which == 37)
-            changeAzimuth(1);
-          else if (event.which == 38)
-            changeElevation(-1);
-          else if (event.which == 39)
-            changeAzimuth(-1);
-          else if (event.which == 40)
-            changeElevation(1);
+          if (event.which == 37) // left
+	  { event.preventDefault(); changeAzimuth(1); }
+          else if (event.which == 38) // up
+	  { event.preventDefault(); changeElevation(-1); }
+          else if (event.which == 39) //right
+	  { event.preventDefault(); changeAzimuth(-1); }
+          else if (event.which == 40) //down
+	  { event.preventDefault(); changeElevation(1); }
         });
 
       }
     });
 
-    $("#control_up").click(function(){ changeElevation(-1); });
-    $("#control_right").click(function(){ changeAzimuth(-1); });
-    $("#control_left").click(function(){ changeAzimuth(1); });
-    $("#control_down").click(function(){ changeElevation(1); });
-    $("#control_reset").click(function(){ resetOrientation(); });
+    var rotated = 0;
+
+    $("#control_up").click(function(){ changeElevation(-1); rotated=1;});
+    $("#control_right").click(function(){ changeAzimuth(-1); rotated=1;});
+    $("#control_left").click(function(){ changeAzimuth(1); rotated=1;});
+    $("#control_down").click(function(){ changeElevation(1); rotated=1;});
+    $("#control_reset").click(function(){ resetOrientation(); rotated=1;});
 
     $("input[name=bbox_validity]").click(function(){ setBboxValidity(); });
     $("input[name=mesh_validity]").click(function(){ setMeshValidity(); });
@@ -199,6 +232,10 @@
       if ( ($("input#bbox_validity").val() === "not_chosen") ||
            ($("input#mesh_validity").val() === "not_chosen") ) {
         alert("Please choose answers for all the questions.\nOtherwise, you cannot submit the HIT.");
+        return false;
+      }
+      if (rotated == 0) {
+        alert("You are not allowed to submit the HIT without rotating the 3D model.");
         return false;
       }
 

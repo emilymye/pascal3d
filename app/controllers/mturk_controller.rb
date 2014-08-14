@@ -69,7 +69,8 @@ class MturkController < ApplicationController
           "x0" => bb["x0"],
           "y0" => bb["y0"],
           "x1" => bb["x1"],
-          "y1" => bb["y1"]
+          "y1" => bb["y1"],
+	  "bbox_validity" => params["bbox_validity"]
         })
         if @annotation.save
           text = text + "Annotation #{@annotation.id} created\n"

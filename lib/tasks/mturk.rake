@@ -109,6 +109,18 @@ namespace :mturk do
         case type
           when "bounding_box"
             boundingboxes = JSON.parse(answers["bounding_boxes"])
+	    if boundingboxes.length == 0
+	      p "No bounding box chosen"
+	      annotations << Annotation.new_from_hit({
+		"image_file"=>answers["image_file"],
+		"category_name"=>answers["category_name"],
+		"x0" => 0,
+		"y0" => 0,
+		"x1" => 0,
+		"y1" => 0,
+		"bbox_validity" => answers["bbox_validity"]
+	      })
+	    else
             boundingboxes.each do |bb|
               annotations << Annotation.new_from_hit({
                 "image_file"=>answers["image_file"],
@@ -116,9 +128,11 @@ namespace :mturk do
                 "x0" => bb["x0"],
                 "y0" => bb["y0"],
                 "x1" => bb["x1"],
-                "y1" => bb["y1"]
+                "y1" => bb["y1"],
+	        "bbox_validity" => answers["bbox_validity"]
               })
             end
+	    end
           when "mesh", "orientation", "keypoints"
             aid = answers["annotation_id"].to_i
             annotation = Annotation.find(aid)

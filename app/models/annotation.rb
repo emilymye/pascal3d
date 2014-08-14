@@ -90,6 +90,7 @@ class Annotation < ActiveRecord::Base
     annotation.x1 = answers["x1"].to_i
     annotation.y0 = answers["y0"].to_i
     annotation.y1 = answers["y1"].to_i
+    annotation.bbox_validity = answers["bbox_validity"]
 
     return annotation
   end
@@ -101,6 +102,8 @@ class Annotation < ActiveRecord::Base
     elsif type == "orientation"
       self.elevation = answers["elevation"]
       self.azimuth = answers["azimuth"]
+      self.bbox_validity = answers["bbox_validity"]
+      self.mesh_validity = answers["mesh_validity"]
       self.keypoint_matches = JSON.parse(answers["keypoint_matches"])
       self.keypoint_matches.each do |k,v|
         v["px"] = nil
