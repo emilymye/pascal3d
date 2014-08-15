@@ -104,7 +104,7 @@ class Annotation < ActiveRecord::Base
       self.azimuth = answers["azimuth"]
       self.bbox_validity = answers["bbox_validity"]
       self.mesh_validity = answers["mesh_validity"]
-      self.keypoint_matches = JSON.parse(answers["keypoint_matches"])
+      self.keypoint_matches = JSON.parse('{}') # JSON.parse(answers["keypoint_matches"])
       self.keypoint_matches.each do |k,v|
         v["px"] = nil
         v["py"] = nil
