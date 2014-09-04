@@ -99,8 +99,9 @@ meshes: [ "bicycle01.json","bicycle02.json","bicycle03.json","bicycle04.json",
 },
 {
   name: 'ashtray',
-  keypoints: ["top_outer_left","top_outer_right","top_outer_back","top_outer_front",
-              "bottom_left","bottom_right","bottom"],
+  keypoints: ["outer_upper1","outer_upper2","outer_upper3","outer_upper4",
+              "outer_lower1","outer_lower2","outer_lower3","outer_lower4",
+	      "inner1","inner2","inner3","inner4"],
   meshes: [ "ashtray01.json","ashtray02.json","ashtray03.json","ashtray04.json","ashtray05.json","ashtray06.json","ashtray07.json",
 	    "ashtray08.json","ashtray09.json","ashtray10.json","incorrect_bbox"]
 },
@@ -115,7 +116,8 @@ meshes: [ "bicycle01.json","bicycle02.json","bicycle03.json","bicycle04.json",
   name: 'basket',
   keypoints: ["tmp"],
   meshes: ["basket01.json","basket02.json","basket03.json","basket04.json","basket05.json","basket06.json","basket07.json",
-	   "basket08.json","basket09.json","basket10.json","basket11.json","basket12.json","basket13.json","incorrect_bbox"]
+	   "basket08.json","basket09.json","basket10.json","basket11.json","basket12.json","basket13.json","basket14.json",
+	   "basket15.json","incorrect_bbox"]
 },
 {
   name: 'bed',
@@ -344,7 +346,8 @@ meshes: [ "bicycle01.json","bicycle02.json","bicycle03.json","bicycle04.json",
   name: 'key',
   keypoints: ["tmp"],
   meshes: ["key01.json","key02.json","key03.json","key04.json","key05.json",
-	   "key06.json","key07.json","key08.json","key09.json","incorrect_bbox"]
+	   "key06.json","key07.json","key08.json","key09.json","key10.json",
+	   "key11.json","key12.json","key13.json","incorrect_bbox"]
 },
 {
   name: 'keyboard',
@@ -365,7 +368,7 @@ meshes: [ "bicycle01.json","bicycle02.json","bicycle03.json","bicycle04.json",
 {
   name: 'lighter',
   keypoints: ["tmp"],
-  meshes: ["lighter01.json","lighter02.json","lighter03.json","lighter04.json","lighter05.json","incorrect_bbox"]
+  meshes: ["lighter01.json","lighter02.json","lighter03.json","lighter04.json","lighter05.json","lighter06.json","incorrect_bbox"]
 },
 {
   name: 'mailbox',
@@ -613,7 +616,7 @@ meshes: [ "bicycle01.json","bicycle02.json","bicycle03.json","bicycle04.json",
 {
   name: 'wheelchair',
   keypoints: ["tmp"],
-  meshes: [ "wheelchair01.json","wheelchair02.json","wheelchair03.json","wheelchair04.json","incorrect_bbox" ]
+  meshes: [ "wheelchair01.json","wheelchair02.json","wheelchair03.json","wheelchair04.json","wheelchair05.json","incorrect_bbox" ]
 }
 ])
 
