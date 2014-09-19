@@ -18,6 +18,7 @@
 </div>
 
 
+
 <div class = "container">
 
 <% if @annotation.nil? %>
@@ -26,68 +27,99 @@
 <% else %>
 <% mesh = @annotation.mesh %>
 <% cat_pretty = @annotation.category_name.humanize.downcase %>
-<!--<% keyptJSON = JSON.generate(@annotation.keypoint_matches) %>-->
 
-  <div class="instructions">
-    <h2>Instruction : Matching points on the mesh <%= cat_pretty %> to the photo</h2>
-    <p>
-      Given a keypoint - a red dot on the 3D <%= cat_pretty %> - find the corresponding point on the <%= cat_pretty %> in the photo. Click to mark the point (a blue dot will appear) 
-    </p>
 
-    <hr>
-    <h2>Instruction : Simple Question</h2>
-    <p>
-      <b>Q1</b> asks you whether the <br>
-    </p>
-    <div class = "buttons hide">
-      Use the buttons below to change keypoints. 
-      You will be allowed to submit only once you have given an answer for all keypoints<br/>
-      <div style = "margin-bottom:5px;">
-        <a id="control_prev" class="btn btn-blue">Prev</a>
-        <a id="control_next" class="btn btn-blue">Next</a>
-      </div>
-      <div id="match_status"></div>
-      <br/>
-    </div><!--end buttons hide-->
+  <div class="instructions_keypoints">
 
-    <!--Simple Questions-->
-    <form>
-      <br>
-      <h3>Q. Keypoint shown as a red dot in the image is ...</h3>
-      <input type="radio" name="reason_no_keypoint" required value="visible"><span style="font-size:16px">Visible</span>.
-      <input type="radio" name="reason_no_keypoint" required value="truncated"><span style="font-size:16px">Truncated</span>.
-      <input type="radio" name="reason_no_keypoint" required value="Occluded"><span style="font-size:16px">Occluded</span>.
-      <input type="radio" name="reason_no_keypoint" required value="Challenging"><span style="font-size:16px">Challenging</span>.
-      <br>
-    </form>
+  <h2>Instruction : Matching points on the 3D <u><%=cat_pretty%></u> to the photo</h2>
+  <p>
+    Given a keypoint - a <span style="color:red">red</span> dot on the 3D <b><%=cat_pretty%></b> - find the corresponding point on the <b><%=cat_pretty%></b> in the photo. Click to mark the point. Then a <span style="color:blue">blue</span> dot will appear. After the selection, you have to answer the simple question. The question asks you the <u>property of the keypoint</u> or <u>the reason why you have trouble clicking the keypoint.</u> Possible options are as follows:<br><br>
 
-    <!-- preview or submit button -->
-    <% if @preview %>
-    <div>Once you begin this task, you will see a button to submit your annotation here.</div>
-    <% else %>
-    <div id="keypoints_information"> </div>
-    <form id="keypoint_form" action="<%=@formurl%>"  method="post">
-      <%= hidden_field_tag 'task', "keypoints" %>
-      <%= hidden_field_tag 'annotation_id', @annotation.id %>
-      <%= hidden_field_tag 'assignmentId', @assignmentId %>
-    
-      <%= hidden_field_tag 'category_name', @annotation.category_name %>
-      <%= hidden_field_tag 'mesh', @annotation.mesh %>
-      <%= hidden_field_tag 'elevation', @annotation.elevation %>
-      <%= hidden_field_tag 'azimuth', @annotation.azimuth %>
+    <b>1) Visible</b> - You don't have any problem choosing the keypoint in the image.<br>
+    <b>2) Truncated</b> - If the corresponding keypoint is outside the image, you cannot click the keypoint.<br>
+    <b>3) Occluded by Others</b> - If the keypoint is blocked by some other objects, you cannot click the keypoint.<br>
+    <b>4) Self Occluded</b> - If the keypoint cannot be seen due to the structure of the object itself, you cannot click the keypoint.<br>
+    <b>5) Challenging</b> - If you cannot recognize the keypoint due to some other problems, choose this option.<br>
+    <b>6) Wrong 3D Orientation</b> - If the orientation of 3D model does not match to the orientation of the object in the image, choose this option.<br><br>
 
-      <%= hidden_field_tag 'reason_no_keypoint', @annotation.reason_no_keypoint %>
+    We explain the details with examples below.
+  </p>
 
-      <%= submit_tag 'Submit', :class => "btn btn-green hide" %>
-    </form>
+  <b><u>Examples</u></b><br>
+  <div class="table">
+  <div class="table-row">
+  <div class="table-cell">
+  <img src="http://cvgl.stanford.edu/projects/PASCAL3D_AMT/keypoints_instruction/bench01_visible_truncated.png" height="135" width="350">
+  <img src="http://cvgl.stanford.edu/projects/PASCAL3D_AMT/keypoints_instruction/bench02_visible_selfoccluded.png" height="135">
+  <img src="http://cvgl.stanford.edu/projects/PASCAL3D_AMT/keypoints_instruction/bench03_occludedbyothers.png" height="135">
+  <img src="http://cvgl.stanford.edu/projects/PASCAL3D_AMT/keypoints_instruction/satellite_dish01_challenging.png" height="135">
+  <img src="http://cvgl.stanford.edu/projects/PASCAL3D_AMT/keypoints_instruction/bench04_wrong_orientation.png" height="135" width="350">
+  <img src="http://cvgl.stanford.edu/projects/PASCAL3D_AMT/keypoints_instruction/kettle01_wrong_orientation.png" height="135">
+  </div></div>
+  </div><!--end table-->
+
+  In case where keypoint is not <b>visible</b>, just click anywhere on the image. We will <span style="color:red;font-weight:bold">"block or reject all HITs</span> of the workers who submit wrong answer or <span style="color:red;font-weight:bold">miss any of the keypoints</span>.        
+
+  </div><!--end instruction-->
+
+
+  <!--display an image and the WebGL viewer with mesh in it-->
+  <div class ="images_mesh">
+  <br><span style="font-weight:bold;font-size:20px">Click the corresponding keypoint in the image</span><br><br>
+  <%= render :partial => "annotated_image", :locals => { :img_file => @annotation.image_file, :annotation => @annotation} %>
+  <br>
+  <%= render :partial => "gl_viewer", :locals => { :mesh => mesh, :small => false, :is_mesh => true } %>
+  </div>
+  
+  <!--buttons for going to the prev/next keypoint-->
+  <div class = "buttons hide">
+  Use the buttons below to change keypoints. 
+  You will be allowed to submit only once you have given an answer for all keypoints<br/>
+  <div style = "margin-bottom:5px;">
+    <a id="control_prev" class="btn btn-blue">Prev</a>
+    <a id="control_next" class="btn btn-blue">Next</a>
+  </div>
+  <div id="match_status"></div>
+  <br/>
+  </div><!--end buttons hide-->
+
+  <!--Simple Question-->
+  <form>
+  <h3>Question: Choose one of the properties of the current keypoint.</h3>
+  <input type="radio" name="keypoint_property" required value="0"/><span style="font-size:12px"><b>Visible</b></span><br>
+  <input type="radio" name="keypoint_property" required value="1"/><span style="font-size:12px"><b>Truncated</b> (Keypoint is Located outside the image.) </span><br>
+  <input type="radio" name="keypoint_property" required value="2"/><span style="font-size:12px"><b>Occluded by Others</b> (Keypoint is occluded by other objects.)</span><br>
+  <input type="radio" name="keypoint_property" required value="3"/><span style="font-size:12px"><b>Self Occluded</b> (Keypoint cannot be seen due to the structure of the object itself.)</span><br>  
+  <input type="radio" name="keypoint_property" required value="4"/><span style="font-size:12px"><b>Challenging</b> (You have trouble choosing the keypoint due to the low resolution of an image or etc.)</span><br>
+  <input type="radio" name="keypoint_property" required value="5"/><span style="font-size:12px"><b>Wrong 3D Orientation</b> (In case given 3D model is totally wrong or its orientation does not match with that of object in the bounding box, choose this option.) </span>
+  <br><br><br>
+  </form>
+
+  <!-- preview or submit button -->
+  <% if @preview %>
+  <div>Once you begin this task, you will see a button to submit your annotation here.</div>
+  <% else %>
+  <div id="keypoints_information"> </div>
+  <form id="keypoint_form" action="<%=@formurl%>"  method="post">
+  <%= hidden_field_tag 'task', "keypoints" %>
+  <%= hidden_field_tag 'annotation_id', @annotation.id %>
+  <%= hidden_field_tag 'assignmentId', @assignmentId %>
+
+  <%= hidden_field_tag 'category_name', @annotation.category_name %>
+  <%= hidden_field_tag 'mesh', @annotation.mesh %>
+  <%= hidden_field_tag 'elevation', @annotation.elevation %>
+  <%= hidden_field_tag 'azimuth', @annotation.azimuth %>
+  <!--<%= hidden_field_tag 'keypoint_matches', @annotation.keypoint_matches %>-->
+
+  <%= hidden_field_tag 'image_width', @annotation.image_width %>
+  <%= hidden_field_tag 'image_height', @annotation.image_height %>
+      
+  <%= submit_tag 'Submit', :class => "btn btn-green hide" %>
+  </form>
   <%end%><!--end preview or submit button-->
 
-</div><!--end instruction-->
+  </div><!--end instruction-->
 
-  <div class = "images">
-    <%= render :partial => "annotated_image", :locals => { :img_file => @annotation.image_file, :annotation => @annotation } %>
-    <%= render :partial => "gl_viewer", :locals => { :mesh => mesh, :small => false, :is_mesh => true }%>
-  </div>
 <% end %>
 </div><!--end container-->
 
@@ -95,13 +127,13 @@
 <script>
   $(function(){
     var markerOffset = $("#marker").width()/2;
-    // var keypointMatches = <%= raw keyptJSON%>;
     var keypointNames = [];
-    // for(var k in keypointMatches) keypointNames.push(k);
     var count = 0;
     var setKeypoints = {};
-    // var nKeypoints = keypointNames.length;
     var currKeypoint = 0;
+    var keypointMatches;
+    var nKeypoints = 0;
+    var setProperties = [];
 
     if ( !Detector.webgl ){
       $(".error").show();
@@ -110,43 +142,108 @@
     }
 
     var canvasid = $("canvas.viewport").attr("id");
-    var objV = new ObjectViewer("<%=mesh%>",canvasid, {
+    var objV = new ObjectViewer("<%=mesh%>", canvasid, {
       elevation: parseFloat("<%= @annotation.elevation %>"),
       azimuth: parseFloat("<%= @annotation.azimuth %>"),
       onLoaded: function() { 
         $(".buttons").show();
         $("#" + canvasid).next().hide();
         $("input[type='submit']").show();
-        
-        // ----------
-        var keypointMatches = objV.findVisibleKeypoints(); // JSON format
+       
+        keypointMatches = objV.findVisibleKeypoints(); // JSON format
         for(var k in keypointMatches) keypointNames.push(k);
-        var nKeypoints = keypointNames.length;
-        // var keyptVal = JSON.stringify(keypointMatches);
-        // ----------
+        nKeypoints = keypointNames.length;
+
+        console.log(objV.elevation);
+        console.log(objV.azimuth);
+        console.log(keypointNames);
+        console.log(keypointMatches);
+
         objV.loadKeypointMeshes(keypointMatches);
         objV.setCurrentKeypoint( keypointNames[currKeypoint] );
 
-        $("input[type='submit']").click(function(e){e.stopPropagation();});
-        $("#control_next").click(function(e){ changeKeypoint(1);e.stopPropagation(); });
+        $("input[type='submit']").click(function(e){ e.stopPropagation(); });
+        $("#control_next").click(function(e){ changeKeypoint(1); e.stopPropagation(); resetRadios(); console.log(keypointMatches); });
         $("#control_prev").click(function(e){ changeKeypoint(-1);e.stopPropagation(); });
 
-        $(document).click( setMarker );
-      }
+        $("input[name=keypoint_property]").click(function(){ setKeypointProperty(); });
+
+        $(".viewport-wrap2").click( function(e){ setMarker(e); });
+        // $("#task_image").click( function(e){ setMarker(e); } );
+        // $(".images_mesh").click(setMarker);
+        // $(document).click( setMarker );
+      } // end onLoaded
     });
 
+    function resetRadios(){
+      $("input[name=keypoint_property]").attr("checked",false);
+    }
+
+    function setKeypointProperty(){
+      
+      console.log($("input[name=keypoint_property]:checked").val());
+
+      var kpName = keypointNames[currKeypoint];
+      var tmp = $("input[name=keypoint_property]:checked").val();
+      keypointMatches[kpName].property = parseInt(tmp);
+      setProperties[currKeypoint] = 1;
+
+      console.log(setProperties);
+      console.log("[value="+tmp+"]");
+
+      // var $radios = $("input:radio[name='keypoint_property']");
+      // $radios.filter('[value=' + tmp + ']').attr('checked', true);
+      $("input[name=keypoint_property]").filter("[value="+tmp+"]").attr("checked",true); //.prop("checked",true);
+    }
+
     function setMarker(e){
+      // var offset = $(".images_mesh").offset();
       var offset = $("#task_image").offset();
       var px = e.pageX - offset.left;
       var py = e.pageY - offset.top;
       var kpName = keypointNames[currKeypoint];
-      keypointMatches[kpName].px = px;
-      keypointMatches[kpName].py = py;
+
+      if (px < 0 || py < 0) {
+        alert("Out of range!");
+        return false;
+      }
+
+      var h = parseInt("<%= @annotation.image_height %>");
+      var w = parseInt("<%= @annotation.image_width %>");
+      var image_aspect_ratio = h/w;
+
+      var max_h = 300;
+      var max_w = 350;
+      var aspect_ratio = max_h/max_w;
+
+      var scale = 1;
+
+      if (aspect_ratio <= image_aspect_ratio)
+        scale = max_h/h;
+      else
+        scale = max_w/w;
+
+
+      if (px > Math.round(w*scale) || py > Math.round(h*scale)) {
+        alert("Out of range!");
+        return false;
+      }
+
+      console.log("Image size (h,w,scale)");
+      console.log(h);
+      console.log(w);
+      console.log(scale);
+
+      keypointMatches[kpName].px = px / scale;
+      keypointMatches[kpName].py = py / scale;
+
       console.log(keypointMatches[kpName]);
       setKeypoints[kpName] = true;
 
-      $("marker").show();
+      // $("marker").show();
+      $("#marker").show();
       $("#marker").offset({ top: e.pageY - markerOffset, left: e.pageX - markerOffset});
+      
       count = 0;
       for (var i in setKeypoints){
         if (setKeypoints[i]) count++;
@@ -155,6 +252,13 @@
     } 
 
     function changeKeypoint(incr) {
+
+      // if worker does not answer to the simple question
+      if (incr==1 && setProperties[currKeypoint]!=1) {
+        alert("Answer to the question below in order to go on to the next keypoint!");
+        return false; 
+      }
+
       currKeypoint = currKeypoint + incr;
       if (currKeypoint < 0) 
         currKeypoint = nKeypoints - 1;
@@ -179,6 +283,10 @@
       if (count < nKeypoints) {
         alert("Not all keypoints have been matched!")
         return false;
+      }
+      if (setProperties[currKeypoint]!=1){
+        alert("Answer to the question below in order to go on to the next step!");
+        return false; 
       }
       for (var n in keypointMatches){
         if (isNaN(keypointMatches[n].x)  || 
