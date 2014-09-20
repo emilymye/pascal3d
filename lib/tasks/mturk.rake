@@ -1,6 +1,7 @@
 require 'csv'
 
 namespace :mturk do
+
   def create_hit(hit_params, url)
     if INIT_CONFIG["HOST_BASE_URL"].starts_with?("localhost")
       p "running on localhost...not submitting to MTurk" and return
@@ -308,7 +309,7 @@ namespace :mturk do
     end # end CSV.foreach
   end # end task
 
-  desc 'Read csv file of images and their bounding box annotations, and creates new mesh HITs'
+  desc 'Read csv file of images with bbox and mesh annotations, and creates new orientation HITs'
   task :submit_hits_orientation, [:anno_list] => :environment do |t, args|
 
     # read orientation HIT configuration
@@ -372,7 +373,70 @@ namespace :mturk do
 
   end # end task
 
-  desc 'Read csv file of ...'
+
+  desc 'Read csv file of images with bbox, mesh, orientation annotations, and creates new keypoints HITs'
   task :submit_hits_keypoints, [:anno_list] => :environment do |t, args|
+
+    # read keypoints HIT configuration
+    hit_params = YAML::load_file('config/hits/keypoints.yml')
+    abort("config/hits/keypoints.yml not found") if hit_params.nil?
+
+    # read csv file from the input argument
+    # row: [filename, category, x0,y0,x1,y1,image_height,image_width,mesh,azimuth,elevation]
+    csv_path = args[:anno_list]
+    abort("1 argument expected: path to csv file listing bbox, mesh and orientation annotations") if csv_path.nil?
+
+    # read :anno_list csv file
+    p "Reading CSV file #{csv_path}"
+    count = 0
+    CSV.foreach(csv_path) do |row|
+      count = count + 1
+      begin
+        # parse and read each element in the row
+        image_path = row[0]
+	category = row[1]
+	x0 = row[2]
+	y0 = row[3]
+	x1 = row[4]
+	y1 = row[5]
+	h = row[6]
+	w = row[7]
+	meshname = row[8]
+	elevation = row[9]
+	azimuth = row[10]
+
+	# for debugging
+	p "image_path is " + image_path
+	p "category is " + category
+	p "bbox is " + x0 + " " + y0 + " " + x1 + " " + y1
+	p "image size [h,w] is [" + h + ", " + w + "]"
+	p "mesh is " + meshname
+
+	# check existence of image paht, category, bbox, mesh, orientation annotations
+	abort("Required arguments: image path, category, x0, y0, x1, y1, h, w, mesh, azimuth, elevation") if image_path.nil? or category.nil? or x0.nil? or x1.nil? or y0.nil? or y1.nil? or h.nil? or w.nil? or meshname.nil? or azimuth.nil? or elevation.nil?
+	abort("image file not found in app/assets/images") if Rails.application.assets.find_asset(image_path).nil?
+	abort("invalid category") if Category.find_by_name(category).nil?
+	abort("config/hits/orientation.yml not found") if hit_params.nil?
+
+	# load config files
+	mesh_params = YAML::load_file('config/hits/mesh.yml' )
+        orientation_params = YAML::load_file('config/hits/orientation.yml' )
+	keypoint_params = YAML::load_file('config/hits/keypoints.yml' )
+	hit_param_types = {mesh: mesh_params, orientation: orientation_params, keypoint: keypoint_params}
+
+        # save annotation to db
+        annotation = Annotation.create({:image_file => image_path, :category_name => category, :stage => 3,
+         :x0 => x0, :x1 => x1, :y0 => y0, :y1 => y1, :image_width => w, :image_height => h, :mesh => meshname, :azimuth => azimuth, :elevation => elevation})
+        rturk_hit = annotation.submit_hit(hit_param_types)
+        p "Successfully submitted hit #{rturk_hit.id}"
+        p "annotation.id is #{annotation.id}"
+
+      rescue StandardError => e
+        p "Unable to submit HIT for row #{count}:#{row.to_s}"
+        p e
+        next			
+      end # end begin
+    end # end CSV.foreach
   end # end task
-end
+
+end # end namespace

@@ -91,7 +91,7 @@ class MturkController < ApplicationController
         @annotation.azimuth = params[:azimuth]
 	@annotation.bbox_validity = params[:bbox_validity]
 	@annotation.mesh_validity = params[:mesh_validity]
-        @annotation.keypoint_matches = JSON.parse(params[:keypoint_matches])
+        @annotation.keypoint_matches = JSON.parse('{}') # JSON.parse(params[:keypoint_matches])
         @annotation.keypoint_matches.each do |k,v|
           v["px"] = nil
           v["py"] = nil

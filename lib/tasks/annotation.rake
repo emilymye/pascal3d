@@ -21,6 +21,16 @@ namespace :annotation do
     p "#{count} annotations deleted"
   end
 
+  desc 'delete annotation with ids specified by the range'
+  task :delete_annotations, [:id1, :id2] => :environment do |t, args|
+
+    for id in args[:id1]..args[:id2]
+      p "No annotation with #{id}, returning" and next if Annotation.find_by_id(id).nil?
+      Annotation.destroy(id)
+      p "Annotation with id #{id} deleted"
+    end
+
+  end
 
   desc 'export all completed annotations'
   task :export_complete, [:filename ] => :environment do |t,args|

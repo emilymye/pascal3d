@@ -99,9 +99,9 @@ meshes: [ "bicycle01.json","bicycle02.json","bicycle03.json","bicycle04.json",
 },
 {
   name: 'ashtray',
-  keypoints: ["outer_upper1","outer_upper2","outer_upper3","outer_upper4",
-              "outer_lower1","outer_lower2","outer_lower3","outer_lower4",
-	      "inner1","inner2","inner3","inner4"],
+  keypoints: ["outer_upper_1","outer_upper_2","outer_upper_3","outer_upper_4",
+              "outer_lower_1","outer_lower_2","outer_lower_3","outer_lower_4",
+	      "inner_1","inner_2","inner_3","inner_4"],
   meshes: [ "ashtray01.json","ashtray02.json","ashtray03.json","ashtray04.json","ashtray05.json","ashtray06.json","ashtray07.json",
 	    "ashtray08.json","ashtray09.json","ashtray10.json","incorrect_bbox"]
 },
@@ -121,16 +121,18 @@ meshes: [ "bicycle01.json","bicycle02.json","bicycle03.json","bicycle04.json",
 },
 {
   name: 'bed',
-  keypoints: ["back_left", "back_right", "frame_upper_left", "frame_upper_right", "frame_lower_left", "frame_lower_right",
-              "mattress_upper_left", "mattress_upper_right", "mattress_lower_left", "mattress_lower_right"],
+  keypoints: ["mattress1","mattress2","mattress3","mattress4",
+	      "frame_front1","frame_front2","frame_front3","frame_front4",
+	      "frame_back1","frame_back2","frame_back3","frame_back4",
+	      "bedpost_bottom1","bedpost_bottom2","bedpost_bottom3","bedpost_bottom4",
+	      "bedpost_top1","bedpost_top2","bedpost_top3","bedpost_top4"],
   meshes: [ "bed01.json","bed02.json","bed03.json","bed04.json","bed05.json","bed06.json","bed07.json",
 	    "bed08.json","bed09.json","bed10.json","incorrect_bbox" ]
 },
 {
   name: 'bench',
-  keypoints: ["seat_front_left","seat_front_right","seat_back_left","seat_back_right",
-              "leg_front_left","leg_front_right","leg_back_left","leg_back_right",
-              "back_upper_left","back_upper_right","left_handle","right_handle"],
+  keypoints: ["seat1","seat2","seat3","seat4","leg1","leg2","leg3","leg4",
+              "back1","back2","handle_left1","handle_left2","handle_right1","handle_right2"],
   meshes: [ "bench01.json","bench02.json","bench03.json","bench04.json","bench05.json","bench06.json","bench07.json","incorrect_bbox"]
 },
 {
@@ -214,7 +216,8 @@ meshes: [ "bicycle01.json","bicycle02.json","bicycle03.json","bicycle04.json",
 {
   name: 'computer',
   keypoints: ["tmp"],
-  meshes: ["computer01.json"]
+  meshes: ["computer01.json","computer02.json","computer03.json","computer04.json","computer05.json","computer06.json",
+	   "computer07.json","computer08.json","computer09.json","computer10.json","computer11.json","incorrect_bbox"]
 },
 {
   name: 'cup',
