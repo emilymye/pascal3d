@@ -104,7 +104,30 @@ namespace :mturk do
     puts "Reviewing all assignments"
     hits.each do |hit|
       hit.assignments.each do |assignment|
-        answers = assignment.answers
+	p "WorkerID : #{assignment.worker_id}"
+	p "Assignment.status : #{assignment.status}"
+	RTurk::Utilities.retry_on_unavailable(1) do
+	  if assignment.status == 'Rejected'
+	    next
+	  end
+	  if assignment.worker_id == 'ASTUVXX56HNU2' && assignment.status == 'Submitted'
+	    p "Reject this worker's HIT!!!"
+	    assignment.reject!("You haven't rotated in an appropriate way. Also, you chose wrong answers for the q1 and q2. Sorry for the rejection.")
+	    # if assignment.status == 'Submitted'
+	    next
+	  end
+	end
+	
+	if assignment.status == 'Rejected'
+	  p "Go on to the next assignment!!!"
+	  next
+	end	
+	if assignment.worker_id == 'ASTUVXX56HNU2' && assignment.status == 'Submitted'
+	  p "Go on to the next assignment!!!"
+	  next
+	end
+        
+	answers = assignment.answers
         type = answers["task"]
         
         case type
@@ -186,22 +209,52 @@ namespace :mturk do
     end
   end
 
+  task :expire_annotations, [:id1, :id2] => :environment do |t, args|
+    id1 = args[:id1]
+    id2 = args[:id2]
+   
+    hits = RTurk::Hit.all
+    next if hits.empty?
+
+    for id in args[:id1]..args[:id2]
+    end 
+
+    puts "Expiring hits"
+    hits.each do |hit|
+
+      hit.assignments.each do |assignment|
+
+        p "assignment.id is #{assignment.id}"
+
+        if assignment.id >= id1 && assignment.id <= id2
+  	  p "inside the if statement"
+	  #RTurk::Utilities.retry_on_unavailable(1) do
+  	  #  hit.disable!
+	  #end
+	  break
+        end
+
+      end # end assignments loop
+    end # end hits loop
+  end
+
   desc 'expire all hits uploaded'
   task :expire_all => :environment do
-    hits = RTurk::Hit.all
-    puts "#{hits.size} hits.\n"
-    next if hits.empty?
+
+      hits = RTurk::Hit.all
+      puts "#{hits.size} hits.\n"
+      next if hits.empty?
     
-    puts "Expiring all hits"
-    hits.each do |hit|
-      RTurk::Utilities.retry_on_unavailable(1) do
-        # unless expired ==> STAGE==Unassignmable
-        #hit.expire!
-        #hit.dispose!
-        hit.disable!
+      puts "Expiring all hits"
+      hits.each do |hit|
+        RTurk::Utilities.retry_on_unavailable(1) do
+          # unless expired ==> STAGE==Unassignmable
+          #hit.expire!
+          #hit.dispose!
+          hit.disable!
+        end
       end
-    end
-  end
+  end # end task
 
   desc 'submit annotations ready to be edited'
   task :resubmit => :environment do |t,args|
@@ -413,7 +466,7 @@ namespace :mturk do
 	p "mesh is " + meshname
 
 	# check existence of image paht, category, bbox, mesh, orientation annotations
-	abort("Required arguments: image path, category, x0, y0, x1, y1, h, w, mesh, azimuth, elevation") if image_path.nil? or category.nil? or x0.nil? or x1.nil? or y0.nil? or y1.nil? or h.nil? or w.nil? or meshname.nil? or azimuth.nil? or elevation.nil?
+	abort("Required arguments: image path, category, x0, y0, x1, y1, h, w, mesh,  elevation, azimuth") if image_path.nil? or category.nil? or x0.nil? or x1.nil? or y0.nil? or y1.nil? or h.nil? or w.nil? or meshname.nil? or azimuth.nil? or elevation.nil?
 	abort("image file not found in app/assets/images") if Rails.application.assets.find_asset(image_path).nil?
 	abort("invalid category") if Category.find_by_name(category).nil?
 	abort("config/hits/orientation.yml not found") if hit_params.nil?

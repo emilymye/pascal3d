@@ -62,7 +62,8 @@ class Annotation < ActiveRecord::Base
     self.keypoint_matches.each do |k,v|
       self.errors[:base] << "Invalid keypoint name #{k}" unless valid_names.include?(k)
       if v.class == Hash
-        self.errors[:base] << "Invalid keypoint value keys" unless v.length == 5 and (v.keys - ["x","y","z","px","py"]).empty?
+	self.errors[:base] << "Invalid keypoint value keyts" unless v.length == 6 and (v.keys - ["x","y","z","px","py","property"]).empty?
+        # self.errors[:base] << "Invalid keypoint value keys" unless v.length == 5 and (v.keys - ["x","y","z","px","py"]).empty?
       else 
         self.errors[:base] << "Invalid keypoint - not hash" unless @v.class == Hash
       end
@@ -178,7 +179,7 @@ class Annotation < ActiveRecord::Base
     ]
 
     keypoint_matches.each do |k,v| 
-      arr << k << v["px"] << v["py"] << v["x"] << v["y"] << v["z"]
+      arr << k << v["px"] << v["py"] << v["x"] << v["y"] << v["z"] << v["property"]
     end
 
     return arr
