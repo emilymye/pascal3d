@@ -106,10 +106,21 @@ namespace :mturk do
       hit.assignments.each do |assignment|
 	p "WorkerID : #{assignment.worker_id}"
 	p "Assignment.status : #{assignment.status}"
+
+	# if assignment.status == 'Submitted'
+	#   p "Reject the HIT!"
+	#   assignment.reject!("You submitted empty answer. Sorry for the rejection.")
+	#   next
+	# end
 	RTurk::Utilities.retry_on_unavailable(1) do
 	  if assignment.status == 'Rejected'
 	    next
 	  end
+	  # if assignment.status == 'Submitted'
+          #   p "Reject this worker's HIT!!!"
+          #   assignment.reject!("You submitted empty answer. Sorry for the rejection.")
+          #   next
+          # end
 	  if assignment.worker_id == 'ASTUVXX56HNU2' && assignment.status == 'Submitted'
 	    p "Reject this worker's HIT!!!"
 	    assignment.reject!("You haven't rotated in an appropriate way. Also, you chose wrong answers for the q1 and q2. Sorry for the rejection.")

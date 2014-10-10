@@ -111,7 +111,24 @@ class Annotation < ActiveRecord::Base
         v["py"] = nil
       end
     elsif type == "keypoints"
-      self.keypoint_matches = JSON.parse(answers["keypoint_matches"])
+      self.mesh_validity = answers["mesh_validity"]
+      tmp = "#{answers["keypoint_matches"]}".split("|")
+      p "tmp[0] is"
+      p "#{tmp[0]}"
+      p "#{tmp}"
+
+      pattern = /"key\d":{.*?},?/ # p "#{tmp2[pattern]}"
+      tmp2 = tmp[0].gsub(pattern, '')
+      # p "#{tmp2}"
+      # p "#{tmp[0]}"
+
+      if answers["category_name"] == "calculator" 
+        self.keypoint_matches = JSON.parse(tmp2)
+      else
+        self.keypoint_matches = JSON.parse(tmp[0])
+        # self.keypoint_matches = JSON.parse(answers["keypoint_matches"])
+      end
+
     end
 
     self.stage = self.stage + 1
@@ -174,7 +191,8 @@ class Annotation < ActiveRecord::Base
       mesh,
       elevation.to_f,
       azimuth.to_f,
-      bbox_validity, mesh_validity,
+      bbox_validity,
+      mesh_validity,
       keypoint_matches.count
     ]
 
